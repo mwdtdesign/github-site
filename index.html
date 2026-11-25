@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>디자인·공예 실기전형 2024–2026 입시결과 (수도권·충청권)</title>
+<meta name="description" content="서울·경기·충청권 대학 디자인·공예 실기전형 2024–2026 입시결과와 학교별 실기·성적 반영 비율">
+<style>
+html,body{margin:0;background:#fff}
+.hp .dash-select{font:inherit;font-size:13px;padding:8px 12px;appearance:auto}
+</style>
+<script src="assets/d3.min.js"></script>
+<script>
+(function () {
+  function parse(t) { t = t.replace(/^\uFEFF/, ''); const rows = []; let r = [], f = '', q = false; for (let i = 0; i < t.length; i++) { const c = t[i]; if (q) { if (c === '"') { if (t[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; } else if (c === '"') q = true; else if (c === ',') { r.push(f); f = ''; } else if (c === '\n') { r.push(f); rows.push(r); r = []; f = ''; } else if (c !== '\r') f += c; } if (f || r.length) { r.push(f); rows.push(r); } const h = rows.shift(); return rows.filter((x) => x.length > 1 || x[0]).map((x) => Object.fromEntries(h.map((k, i) => [k, x[i] ?? '']))); }
+  const store = { history: { status: 'loading', data: [] }, methods: { status: 'loading', data: [] } };
+  const calcs = [], draws = {};
+  let ready = false;
+  const run = (n, o) => { try { store[n] = { status: 'ok', data: o.fn(...(o.inputs || []).map((i) => (store[i] || { data: [] }).data)) }; } catch (e) { store[n] = { status: 'error', data: [] }; console.error(n, e); } };
+  const drawOne = (n) => { const g = draws[n]; if (g) document.querySelectorAll('[data-draw="' + n + '"]').forEach((el) => { try { g(el); } catch (e) { console.error(n, e); } }); };
+  window.dash = {
+    calc(n, o) { calcs.push([n, o]); if (ready) run(n, o); else store[n] = { status: 'loading', data: [] }; },
+    data(n) { return store[n] || { status: 'loading', data: [] }; },
+    draw(n, fn) { if (fn) draws[n] = fn; drawOne(n); }
+  };
+  const get = (u) => fetch(u, { cache: 'no-cache' }).then((r) => { if (!r.ok) throw new Error(u + ' ' + r.status); return r.text(); });
+  Promise.all([get('data/history.csv'), get('data/methods.csv')]).then(([h, m]) => {
+    store.history = { status: 'ok', data: parse(h) }; store.methods = { status: 'ok', data: parse(m) };
+  }).catch((e) => { console.error(e); store.history = { status: 'error', data: [] }; store.methods = { status: 'error', data: [] }; })
+    .then(() => { ready = true; for (const [n, o] of calcs) { if (store.history.status === 'ok') run(n, o); else store[n] = { status: 'error', data: [] }; } Object.keys(draws).forEach(drawOne); });
+})();
+</script>
+</head>
+<body>
+<div id="dash-root">
+
+
+<style>
+@font-face{font-family:'Pretendard Variable';src:url('assets/PretendardVariable.woff2') format('woff2-variations'),url('assets/PretendardVariable.woff2') format('woff2');font-weight:45 920;font-style:normal;font-display:swap}
+/* Layout: one long scroll of full-width white bands, every other one a soft grey; each band opens with one big centered headline + one grey line; blue is the only accent */
+#dash-root{--dash-gutter:0}
+.hp{--hp-bg:#fff;--hp-panel:#f4f5f9;--hp-fg:#0b0b14;--hp-muted:rgba(11,11,20,.6);--hp-faint:rgba(11,11,20,.42);--hp-line:rgba(11,11,20,.1);--hp-blue:#4c5cff;--hp-violet:#8a4dff;--hp-blue2:#3d52ff;--hp-grad:linear-gradient(90deg,#3d52ff,#8a4dff);--hp-th:#eef0f6;--hp-chip:rgba(11,11,20,.05);
+  --f-text:'Pretendard Variable',Pretendard,system-ui,sans-serif,sans-serif;--f-disp:'Pretendard Variable',Pretendard,system-ui,sans-serif,sans-serif;
+  background:var(--hp-bg);color:var(--hp-fg);font-family:var(--f-text);letter-spacing:-.02em;color-scheme:light;overflow-x:clip}
+.hp,.hp button,.hp input,.hp select,.hp svg text{font-family:var(--f-text)!important}
+.hp .band{background:var(--hp-bg);color:var(--hp-fg);padding-block:clamp(72px,12vw,140px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.hp .band.light{--hp-bg:#f5f6f9;--hp-panel:#fff;--hp-th:#eceef5}
+.hp .wrap{max-width:1120px;margin:0 auto;min-width:0}
+.hp p{line-height:1.65;margin:0 0 10px}
+.hp a{color:inherit}
+.hp a:focus-visible,.hp button:focus-visible,.hp input:focus-visible,.hp select:focus-visible{outline:2px solid var(--hp-blue2);outline-offset:2px}
+.hp .muted{color:var(--hp-muted);font-size:14px}
+.hp .faint{color:var(--hp-faint);font-size:12px}
+/* section heads */
+.hp .head{text-align:center;max-width:820px;margin:0 auto clamp(36px,6vw,64px)}
+.hp .head h2,.hp .hero h1,.hp .stmt p,.hp .step-lab,.hp .scard h3,.hp .fig b,.hp .marq span{font-family:var(--f-disp)!important;font-weight:700}
+.hp .hero h1,.hp .head h2,.hp .fig b{font-weight:800}
+.hp .head h2{font-size:clamp(34px,5.6vw,56px);line-height:1.18;letter-spacing:-.03em;margin:0 0 14px;text-wrap:balance}
+.hp .head .lead{font-size:16px;color:var(--hp-muted);margin:0;text-wrap:balance}
+.hp .eyebrow{display:inline-block;font-size:13px;font-weight:600;color:var(--hp-blue2);letter-spacing:.04em;margin-bottom:14px}
+/* hero */
+.hp .hero{text-align:center;min-height:min(92vh,860px);display:flex;flex-direction:column;justify-content:center;margin-top:calc(-1 * env(safe-area-inset-top,0px));padding-top:calc(env(safe-area-inset-top,0px) + clamp(72px,12vw,140px));background:radial-gradient(60% 50% at 50% 38%,rgba(61,82,255,.09),transparent 70%),#fff}
+.hp .hero .kicker{font-size:14px;color:var(--hp-muted);margin:0 0 22px}
+.hp .hero h1{font-size:clamp(46px,9vw,96px);line-height:1.08;letter-spacing:-.04em;margin:0 0 22px;text-wrap:balance}
+.hp .hero h1 em{font-style:normal;background:var(--hp-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hp .hero .sub{font-size:clamp(16px,2vw,19px);color:var(--hp-muted);max-width:620px;margin:0 auto 40px}
+.hp .counters{display:flex;justify-content:center;flex-wrap:wrap;gap:clamp(24px,6vw,72px);margin-bottom:44px}
+.hp .counters div{display:flex;flex-direction:column;gap:4px;min-width:90px}
+.hp .counters b{font-size:clamp(34px,5vw,52px);font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.hp .counters span{font-size:13px;color:var(--hp-muted)}
+.hp .jump{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.hp .jump a{border:1px solid var(--hp-line);border-radius:999px;padding:7px 14px;font-size:13px;text-decoration:none;color:var(--hp-muted)}
+.hp .jump a:hover{border-color:var(--hp-blue2);color:var(--hp-fg)}
+.hp .cue{margin-top:44px;font-size:12px;color:var(--hp-faint);display:flex;flex-direction:column;align-items:center;gap:8px}
+.hp .cue i{width:1px;height:38px;background:linear-gradient(var(--hp-blue2),transparent);animation:cue 1.8s ease-in-out infinite}
+@keyframes cue{0%{transform:scaleY(.2);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}100%{transform:scaleY(.2);transform-origin:bottom}}
+/* marquee */
+.hp .marq{overflow:hidden;background:#fff;border-block:1px solid var(--hp-line);padding-block:22px}
+.hp .marq .track{display:flex;width:max-content;animation:marq 48s linear infinite}
+.hp .marq span{font-size:clamp(28px,4.4vw,48px);white-space:nowrap;padding-right:.6em;color:var(--hp-fg)}
+.hp .marq span:nth-child(even){color:transparent;-webkit-text-stroke:1px #3d52ff}
+@keyframes marq{to{transform:translateX(-50%)}}
+/* sticky storytelling */
+.hp .story{position:relative;height:calc(5 * 80vh)}
+.hp .story-in{position:sticky;top:calc(env(safe-area-inset-top,0px) + 8vh);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(24px,5vw,64px);align-items:center;min-height:76vh}
+.hp .steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.hp .steps button{all:unset;cursor:pointer;display:block;opacity:.2;transition:opacity .35s}
+.hp .steps button[aria-current="true"]{opacity:1}
+.hp .step-lab{font-size:clamp(26px,3.6vw,40px);line-height:1.3;letter-spacing:-.03em}
+.hp .stage{background:var(--hp-panel);border:1px solid var(--hp-line);border-radius:24px;padding:clamp(20px,3.5vw,36px);min-height:380px;display:flex;flex-direction:column;gap:18px;min-width:0}
+.hp .stage .vis{min-height:190px;display:flex;align-items:center;justify-content:center}
+.hp .stage .vis svg{width:100%;height:auto;max-width:460px}
+.hp .stage h3{font-size:20px;font-weight:700;margin:0}
+.hp .stage p{font-size:15px;color:var(--hp-muted);margin:0}
+.hp .stage .ex{font-size:13px;background:var(--hp-chip);border-radius:12px;padding:10px 14px;color:var(--hp-fg)}
+.hp .vis .on{fill:url(#hpGrad)}
+.hp .vis .off{fill:var(--hp-line)}
+.hp .vis text{fill:var(--hp-fg);font-size:12px}
+.hp .vis .sm{fill:var(--hp-muted);font-size:11px}
+.hp .stage.swap .vis>*{animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
+@media (max-width:760px){.hp .story{height:calc(5 * 90vh)}.hp .story-in{grid-template-columns:minmax(0,1fr);gap:14px;top:calc(env(safe-area-inset-top,0px) + 2vh);align-items:start}.hp .steps{flex-direction:row;flex-wrap:wrap;gap:4px 12px}.hp .step-lab{font-size:20px}.hp .stage{min-height:0}.hp .stage .vis{min-height:150px}}
+/* without scripts (e.g. a messenger's file preview) the five explanations show as plain cards instead of the scroll story */
+.hp:not(.js) .story{display:none}
+.hp.js .story-static{display:none}
+.hp .story-static{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
+.hp .story-static .stage{min-height:0}
+.hp .avgbox svg{max-width:100%;height:auto}
+/* number chips */
+.hp .figs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.hp .figs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.hp .figs{grid-template-columns:minmax(0,1fr)}}
+.hp .fig{background:var(--hp-panel);border:1px solid var(--hp-line);border-radius:20px;padding:22px 20px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.hp .fig small{font-size:13px;color:var(--hp-muted)}
+.hp .fig b{font-size:clamp(34px,4.4vw,46px);line-height:1.05;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.hp .fig b .u{font-family:var(--f-text);font-size:.42em;font-weight:600;margin-left:3px}
+.hp .fig .nm{font-size:14px;font-weight:600}
+.hp .fig p{font-size:13px;color:var(--hp-muted);margin:0}
+/* school cards */
+.hp .scards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:980px){.hp .scards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:620px){.hp .scards{grid-template-columns:minmax(0,1fr)}}
+.hp .scard{font:inherit;text-align:left;color:inherit;cursor:pointer;background:var(--hp-panel);border:1px solid var(--hp-line);border-radius:20px;padding:22px 20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.hp .scard:hover{border-color:var(--hp-blue)}
+.hp .scard h3{font-size:22px;letter-spacing:-.02em;margin:0;line-height:1.2}
+.hp .scard .rg{font-size:13px;color:var(--hp-muted)}
+.hp .trk{display:flex;flex-direction:column;gap:6px}
+.hp .trk .tl{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;font-weight:600}
+.hp .trk .tl span:last-child{color:var(--hp-muted);font-weight:500;text-align:right}
+.hp .bar{display:flex;height:12px;border-radius:999px;overflow:hidden;background:var(--hp-chip)}
+.hp .bar i{display:block;height:100%;background:var(--hp-grad);transform-origin:left}
+.hp .bar i+i{background:var(--hp-faint)}
+.hp .bar.unk{background:repeating-linear-gradient(135deg,var(--hp-chip) 0 6px,transparent 6px 12px)}
+.hp .trk .sj{font-size:12px;color:var(--hp-muted)}
+.hp .scard .src{font-size:11px;color:var(--hp-faint);margin-top:auto}
+.hp .legend{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;font-size:13px;color:var(--hp-muted);margin:-20px 0 28px}
+.hp .legend span{display:inline-flex;align-items:center;gap:6px}
+.hp .legend i{width:22px;height:10px;border-radius:999px;display:inline-block}
+/* statement */
+.hp .stmt{display:flex;flex-direction:column;gap:clamp(40px,8vw,96px);text-align:center}
+.hp .stmt p{font-size:clamp(26px,3.6vw,34px);line-height:1.35;letter-spacing:-.03em;margin:0;text-wrap:balance}
+.hp .stmt p span{display:block;font-family:var(--f-text);font-size:15px;color:var(--hp-muted);margin-top:12px;letter-spacing:-.01em}
+/* data UI (kept from previous version) */
+.hp .chartbox{position:relative;min-height:200px;margin-top:14px;margin-bottom:12px}
+.hp svg text{font-family:var(--f-text)}
+.hp svg .tick text,.hp svg .lbl{fill:var(--hp-muted);font-size:11px}
+.hp svg .val{fill:var(--hp-fg);font-size:11px;font-weight:600;font-variant-numeric:tabular-nums}
+.hp .tip{position:absolute;pointer-events:none;background:#14142a;border:1px solid #14142a;box-shadow:0 6px 20px rgba(11,11,20,.18);border-radius:8px;padding:7px 10px;font-size:12px;line-height:1.5;display:none;z-index:3;max-width:240px;color:#fff}
+.hp .pill{display:inline-block;font-size:11px;padding:2px 9px;border-radius:999px;margin:2px 4px 0 0;border:1px solid var(--hp-line)}
+.hp .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin:0 0 16px}
+.hp .controls .dash-select{background-color:var(--hp-panel);color:var(--hp-fg);border:1px solid var(--hp-line);border-radius:10px}
+.hp .controls input[type=search]{font:inherit;font-size:13px;padding:8px 12px;border:1px solid var(--hp-line);border-radius:10px;background-color:var(--hp-panel);color:var(--hp-fg);min-width:min(180px,100%)}
+.hp .tw{overflow:auto;max-height:72vh;border:1px solid var(--hp-line);border-radius:16px;background:var(--hp-panel)}
+.hp table.t{border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums;width:max-content;min-width:100%}
+.hp table.t th,.hp table.t td{border-bottom:1px solid var(--hp-line);padding:9px 11px;text-align:left;vertical-align:top;max-width:250px}
+.hp table.t th{position:sticky;top:0;background:var(--hp-th);color:var(--hp-muted);font-weight:600;white-space:nowrap;z-index:1}
+.hp table.t tr:hover td{background:rgba(76,92,255,.08)}
+.hp td.b{font-size:15px;font-weight:700}
+.hp .na{color:var(--hp-faint)}
+.hp .hint{display:block;color:var(--hp-muted);font-size:11px}
+.hp .guide{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px;margin-top:28px}
+.hp .guide div{background:var(--hp-panel);border:1px solid var(--hp-line);border-radius:16px;padding:16px}
+.hp .guide h3{font-size:15px;margin:0 0 6px}
+.hp .guide p{font-size:13px;color:var(--hp-muted);margin:0}
+.hp ul.lim{padding-left:20px;line-height:1.8;margin:0;color:var(--hp-muted);font-size:13.5px;max-width:860px;margin-inline:auto}
+.hp .foot{font-size:12px;color:var(--hp-faint);text-align:center;padding-block:28px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-top:1px solid var(--hp-line);background:var(--hp-bg)}
+.hp .seg{display:inline-flex;border:1px solid var(--hp-line);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
+.hp .seg button{font:inherit;font-size:13px;color:var(--hp-muted);background:none;border:0;border-radius:999px;padding:7px 14px;cursor:pointer}
+.hp .seg button[aria-pressed="true"]{background:var(--hp-grad);color:#fff;font-weight:600}
+.hp .legendrow{display:flex;justify-content:center;gap:16px;font-size:12px;color:var(--hp-muted);margin:4px 0 0}
+.hp .legendrow span{display:inline-flex;align-items:center;gap:6px}
+.hp .lg-dot{width:9px;height:9px;border-radius:50%;background:rgba(11,11,20,.3);display:inline-block}
+.hp .lg-mean{width:14px;height:14px;border-radius:50%;background:var(--hp-grad);display:inline-block}
+.hp .avgbox svg .tick-t{fill:var(--hp-muted);font-size:11px}
+.hp .avgbox svg .name{fill:var(--hp-fg);font-size:12.5px}
+.hp .avgbox{min-height:120px}
+.hp .convgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.hp .convbox{background:var(--hp-panel);border:1px solid var(--hp-line);border-radius:20px;padding:18px 16px 18px;min-width:0}
+.hp .convbox h3{font-size:16px;margin:0 0 6px}
+.hp .convbox .tw{max-height:none;margin-top:8px;border-radius:12px}
+.hp .convbox table.t{min-width:0;width:100%}
+.hp .convbox table.t td,.hp .convbox table.t th{padding:7px 9px;white-space:normal}
+.hp .convcalc{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px;font-size:13px}
+.hp .convcalc input{font:inherit;font-size:14px;width:120px;padding:8px 10px;border:1px solid var(--hp-line);border-radius:10px;background:var(--hp-bg);color:var(--hp-fg)}
+.hp .convcalc output{flex-basis:100%;color:var(--hp-fg);font-weight:600;line-height:1.5}
+.hp .convbox .tw + .tw{margin-top:10px}
+.hp .convbox .convcalc{margin:10px 0 4px}
+/* motion: everything visible at rest; JS adds .pre only to below-the-fold blocks, then .in on scroll */
+.hp .rv{transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
+.hp .rv.pre{opacity:0;transform:translateY(28px)}
+.hp .head h2 .w{display:inline-block;transition:opacity .6s,transform .6s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--i) * 60ms)}
+.hp .head.pre h2 .w{opacity:0;transform:translateY(.45em)}
+.hp .head.pre{opacity:1;transform:none}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+@keyframes grow{from{transform:scaleX(0)}}
+@keyframes pop{from{opacity:0;transform:scale(.3)}}
+.hp .band.in .bar i{animation:grow 1s cubic-bezier(.2,.8,.2,1) both}
+.hp .band.in .avgbox svg circle{animation:pop .6s cubic-bezier(.2,.8,.2,1) both;transform-box:fill-box;transform-origin:center}
+@media (prefers-reduced-motion:reduce){.hp *,.hp *::before,.hp *::after{animation:none!important;transition:none!important}.hp .rv.pre,.hp .head.pre h2 .w{opacity:1!important;transform:none!important}}
+@media print{.hp .tw{max-height:none;overflow:visible}.hp .story{height:auto}.hp .story-in{position:static}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="hpGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3d52ff"/><stop offset="1" stop-color="#8a4dff"/></linearGradient>
+</defs></svg>
+
+<div class="hp" lang="ko" id="top">
+
+<header class="band hero">
+  <div class="wrap">
+    <p class="kicker">디자인·공예 실기전형 2024–2026 입시결과 (수도권·충청권)</p>
+    <h1>디자인 실기,<br><em>3년 입결</em>을 한 번에</h1>
+    <p class="sub">서울·경기·충청권 대학의 디자인·공예 실기 전형 결과를 대학이 낸 원문 그대로 모았어요.</p>
+    <div class="counters" id="facts">
+      <div><b data-draw="k_univs" data-count data-source="h_kpi" data-field="univs" data-row="0">—</b><span>대학</span></div>
+      <div><b data-draw="k_tracks" data-count data-source="h_kpi" data-field="tracks" data-row="0">—</b><span>실기 전형</span></div>
+      <div><b data-draw="k_rows" data-count data-source="h_kpi" data-field="rows" data-row="0">—</b><span>자료 줄</span></div>
+    </div>
+    <nav class="jump" aria-label="바로가기"><a href="#learn">처음이세요?</a><a href="#schools">학교별 전형방법</a><a href="#trend">3년 비교</a><a href="#avg">학교별 평균</a><a href="#results">전체 자료</a><a href="#conv">등급표</a><a href="#offices">입학처</a></nav>
+    <div class="cue" aria-hidden="true"><i></i>아래로 내려 보세요</div>
+  </div>
+</header>
+
+<div class="marq" aria-hidden="true"><div class="track"><span>시각디자인</span><span>산업디자인</span><span>공예</span><span>패션디자인</span><span>실내디자인</span><span>도예</span><span>공간디자인</span><span>영상디자인</span><span>금속공예</span><span>커뮤니케이션디자인</span><span>시각디자인</span><span>산업디자인</span><span>공예</span><span>패션디자인</span><span>실내디자인</span><span>도예</span><span>공간디자인</span><span>영상디자인</span><span>금속공예</span><span>커뮤니케이션디자인</span></div></div>
+
+<section class="band light" id="learn">
+  <div class="wrap">
+    <div class="head rv"><span class="eyebrow">용어부터 천천히</span><h2>입시 처음이세요?</h2><p class="lead">이 페이지에 나오는 말 다섯 개만 알면 표를 읽을 수 있어요. 스크롤하면 하나씩 바뀌어요.</p></div>
+    <div class="story" id="story">
+      <div class="story-in">
+        <ol class="steps" id="steps">
+          <li><button type="button" data-step="0" aria-current="true"><span class="step-lab">수시와 정시</span></button></li>
+          <li><button type="button" data-step="1" aria-current="false"><span class="step-lab">내신 등급</span></button></li>
+          <li><button type="button" data-step="2" aria-current="false"><span class="step-lab">수능 백분위</span></button></li>
+          <li><button type="button" data-step="3" aria-current="false"><span class="step-lab">평균 · 50% · 70%</span></button></li>
+          <li><button type="button" data-step="4" aria-current="false"><span class="step-lab">실기 비중</span></button></li>
+        </ol>
+        <div class="stage" id="stage" aria-live="polite"></div>
+      </div>
+    </div>
+    <div class="story-static" id="storyStatic"></div>
+  </div>
+</section>
+
+<section class="band" id="numbers">
+  <div class="wrap">
+    <div class="head rv"><h2>숫자로 먼저 볼까요</h2><p class="lead">모은 자료에서 바로 계산한 네 가지예요.</p></div>
+    <div class="figs rv">
+      <div class="fig"><small>3년 결과가 모두 있는 전형</small><b><span data-draw="k_full3" data-count data-source="h_kpi" data-field="full3" data-row="0">—</span><span class="u">개</span></b><p>나머지는 그 해 자료가 없거나 학과·전형 이름이 바뀐 경우예요.</p></div>
+      <div class="fig"><small>경쟁률이 가장 많이 오른 전형</small><b>+<span data-draw="u_rise" data-source="h_rise" data-field="rise" data-row="0">—</span><span class="u">: 1</span></b><span class="nm" data-draw="u_rise_name" data-source="h_rise">—</span><p>2024 <span data-draw="u_rise_from" data-source="h_rise" data-field="from" data-row="0">—</span> : 1 → 2026 <span data-draw="u_rise_to" data-source="h_rise" data-field="to" data-row="0">—</span> : 1</p></div>
+      <div class="fig"><small>공개된 가장 낮은 합격 내신</small><b><span data-draw="u_low" data-source="h_low" data-field="v" data-row="0">—</span><span class="u">등급</span></b><span class="nm" data-draw="u_low_name" data-source="h_low">—</span><p>실기 비중이 큰 전형은 내신이 낮아도 붙을 수 있어요.</p></div>
+      <div class="fig"><small>실기·성적 비율을 확인한 전형</small><b><span data-draw="k_methods" data-count>—</span><span class="u">개</span></b><p>2027 모집요강·입결 원문에서 비율이 분명히 적힌 전형만 셌어요.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band light" id="schools">
+  <div class="wrap">
+    <div class="head rv"><span class="eyebrow">전형방법</span><h2>학교마다 실기 비중이 달라요</h2><p class="lead">막대의 파란 부분이 실기, 회색이 성적(내신·수능)이에요. 카드를 누르면 그 학교 자료만 모아 볼 수 있어요.</p></div>
+    <div class="legend" aria-hidden="true"><span><i style="background:var(--hp-grad)"></i>실기</span><span><i style="background:var(--hp-faint)"></i>성적(내신·수능)</span><span><i class="bar unk" style="height:10px"></i>아직 확인 못 함</span></div>
+    <div class="scards" data-draw="scards" data-source="h_cards"></div>
+    <p class="faint" style="text-align:center;margin-top:24px">비율은 2027학년도 모집요강(진학사 입시자료실 게시본)이나 대학 입결 원문에 적힌 값만 넣었어요. 빗금 막대는 요강 표를 아직 확인하지 못한 전형이에요. 원서 쓰기 전에 꼭 대학 모집요강을 확인하세요.</p>
+  </div>
+</section>
+
+<section class="band" id="trend">
+  <div class="wrap">
+    <div class="head rv"><h2>같은 전형, 3년 동안 어떻게 변했을까</h2><p class="lead">한 줄이 한 전형이에요. 평균이 있으면 평균, 없으면 70% → 50% → 가장 낮은 값 순으로 보여 줘요.</p></div>
+    <div class="controls">
+      <select class="dash-select" data-draw="p_univ" aria-label="대학"></select>
+      <select class="dash-select" data-draw="p_sigi" aria-label="수시·정시"></select>
+      <span class="muted" data-draw="p_count">—</span>
+    </div>
+    <div class="tw rv">
+      <table class="t" id="pivot" data-source="h_pivot" data-row-key="key">
+        <thead><tr>
+          <th data-field="대학명">대학</th><th data-field="모집단위">모집단위</th><th data-field="전형시기">수시·정시</th><th data-field="전형명">전형</th><th data-field="지표">어떤 성적</th>
+          <th data-field="y2024">2024</th><th data-field="y2025">2025</th><th data-field="y2026">2026</th><th data-field="흐름">흐름</th>
+          <th data-field="c2024">경쟁률 2024</th><th data-field="c2025">경쟁률 2025</th><th data-field="c2026">경쟁률 2026</th>
+        </tr></thead>
+        <tbody data-draw="pivot"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="band light stmt-band">
+  <div class="wrap stmt">
+    <p class="rv">숫자가 낮다고 포기하지 마세요.<span>실기 비중이 80%인 전형도 있어요. 성적은 합격의 일부일 뿐이에요.</span></p>
+    <p class="rv">학교끼리 순위를 매기는 표가 아니에요.<span>대학마다 계산 과목과 기준(최종등록자·최종합격자)이 달라요.</span></p>
+    <p class="rv">지원 전엔 꼭 원문을 확인하세요.<span>표마다 대학이 낸 원문 파일 링크를 달아 두었어요.</span></p>
+  </div>
+</section>
+
+<section class="band" id="avg">
+  <div class="wrap">
+    <div class="head rv"><h2>학교별 평균 성적</h2><p class="lead">버튼으로 평균·50% 위치·70% 위치를 바꿔 보세요. 오른쪽으로 갈수록 좋은 성적이에요.</p></div>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="성적 종류">
+        <button type="button" data-fam="grade" aria-pressed="true">수시 내신 등급</button>
+        <button type="button" data-fam="pct" aria-pressed="false">정시 수능 백분위</button>
+      </div>
+      <div class="seg" role="group" aria-label="기준 값">
+        <button type="button" data-basis="avg" aria-pressed="true">평균</button>
+        <button type="button" data-basis="p50" aria-pressed="false">50% 위치</button>
+        <button type="button" data-basis="p70" aria-pressed="false">70% 위치</button>
+      </div>
+      <select class="dash-select" data-draw="a_year" aria-label="학년도"></select>
+    </div>
+    <div class="legendrow" aria-hidden="true"><span><i class="lg-dot"></i>전형 하나</span><span><i class="lg-mean"></i>학교 평균</span></div>
+    <div class="chartbox avgbox" data-draw="avgchart" data-source="h_avgdots" role="img" aria-label="학교별 평균 성적 점 그래프"></div>
+    <p class="faint" data-draw="avgnote"></p>
+    <div class="guide">
+      <div><h3>평균이란?</h3><p>합격생 모두의 성적을 더해 사람 수로 나눈 값이에요. 3등급, 4등급, 5등급 세 명이면 평균은 (3+4+5)÷3 = 4등급이에요.</p></div>
+      <div><h3>점 읽는 법</h3><p>한 줄이 한 학교예요. 작은 흰 점은 전형 하나, 큰 파란 점은 그 학교 전형들의 평균이에요. 점에 마우스를 올리면 자세히 나와요.</p></div>
+      <div><h3>오른쪽이 좋은 성적</h3><p>내신 등급은 숫자가 작을수록 좋아서 축을 거꾸로 놓았어요(1등급이 오른쪽). 수능 백분위는 클수록 오른쪽이에요.</p></div>
+      <div><h3>들어간 학교</h3><p>고른 값(평균·50%·70%)을 공개한 학교만 그려요. 빠진 학교는 그래프 아래 회색 글씨에 적었어요.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band light" id="results">
+  <div class="wrap">
+    <div class="head rv"><h2>전체 자료</h2><p class="lead">원문 값 그대로예요. 학교 이름 옆 “○○캠”은 캠퍼스예요. 맨 오른쪽 “원문 자료”를 누르면 출처가 열려요.</p></div>
+    <div class="controls">
+      <select class="dash-select" data-draw="f_year" aria-label="학년도"></select>
+      <select class="dash-select" data-draw="f_univ" aria-label="대학"></select>
+      <select class="dash-select" data-draw="f_sigi" aria-label="수시·정시"></select>
+      <input type="search" id="f_q" placeholder="학과·전형 검색" aria-label="학과·전형 검색">
+      <span class="muted" data-draw="f_count">—</span>
+    </div>
+    <div class="tw">
+      <table class="t" id="maintable" data-source="h_rows" data-row-key="hid">
+        <thead><tr>
+          <th data-field="학년도">학년도</th><th data-field="학교">대학(캠퍼스)</th><th data-field="모집단위">모집단위</th><th data-field="전형시기">수시·정시</th><th data-field="전형명">전형</th><th data-field="세부">세부</th>
+          <th data-field="지표">어떤 성적</th><th data-field="최고">가장 좋은</th><th data-field="평균">평균</th><th data-field="최저">가장 낮은</th><th data-field="50%">50% 위치</th><th data-field="70%">70% 위치</th>
+          <th data-field="기준">기준</th><th data-field="모집">모집</th><th data-field="지원">지원</th><th data-field="경쟁률">경쟁률</th><th data-field="충원">추가 합격</th><th data-field="기타공개값">그 밖의 공개값</th><th data-field="자료명">원문 자료</th><th data-field="비고">비고</th>
+        </tr></thead>
+        <tbody data-draw="maintable"></tbody>
+      </table>
+    </div>
+    <p class="faint" style="text-align:center;margin-top:14px">원본 표: <a href="data/history.csv">입시결과 CSV</a> · <a href="data/methods.csv">전형방법 CSV</a></p>
+    <div class="tw" style="margin-top:36px;max-height:60vh">
+      <table class="t" data-source="h_methods" data-row-key="key">
+        <thead><tr><th data-field="학교">대학(캠퍼스)</th><th data-field="전형시기">수시·정시</th><th data-field="전형명">전형</th><th data-field="비율">실기 : 성적</th><th data-field="성적종류">성적 종류</th><th data-field="실질반영">실질 반영</th><th data-field="반영과목">반영 과목</th><th data-field="확인상태">확인</th><th data-field="출처">출처</th><th data-field="비고">비고</th></tr></thead>
+        <tbody data-draw="t_methods"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="conv">
+  <div class="wrap">
+    <div class="head rv"><h2>등급 참고표</h2><p class="lead">5등급제 내신을 9등급제로 바꿔 예전 입결과 대조하고, 수능 백분위가 몇 등급쯤인지 가늠해 보세요.</p></div>
+    <div class="convgrid">
+    <div class="convbox">
+      <h3>수시 · 5등급제 성적 → 9등급제 환산</h3>
+      <p class="faint">2028학년도 대입(2025년 고1)부터 내신은 5등급제(비율 10·24·32·24·10%)입니다. 위 자료의 입결은 모두 9등급제입니다.</p>
+      <div class="convcalc">
+        <label for="cv_g5">내 5등급제 평균 등급</label>
+        <input id="cv_g5" type="number" min="1" max="5" step="0.01" placeholder="예: 2.30">
+        <output id="cv_g5_out">→ 9등급제 환산 등급과 비슷한 입결 학교</output>
+      </div>
+      <div class="tw"><table class="t">
+        <thead><tr><th>5등급제 평균</th><th>누적 비율 (대략)</th><th>9등급제 환산</th></tr></thead>
+        <tbody>
+          <tr><td class="b">1.0</td><td>상위 5%</td><td class="b">1.55</td></tr>
+          <tr><td class="b">1.5</td><td>상위 13.5%</td><td class="b">2.63</td></tr>
+          <tr><td class="b">2.0</td><td>상위 22%</td><td class="b">3.34</td></tr>
+          <tr><td class="b">2.5</td><td>상위 36%</td><td class="b">4.24</td></tr>
+          <tr><td class="b">3.0</td><td>상위 50%</td><td class="b">5.00</td></tr>
+          <tr><td class="b">3.5</td><td>상위 64%</td><td class="b">5.76</td></tr>
+          <tr><td class="b">4.0</td><td>상위 78%</td><td class="b">6.66</td></tr>
+          <tr><td class="b">4.5</td><td>상위 86.5%</td><td class="b">7.37</td></tr>
+          <tr><td class="b">5.0</td><td>상위 95%</td><td class="b">8.45</td></tr>
+        </tbody>
+      </table></div>
+      <p class="faint">정수 등급은 그 등급 구간의 가운데(예: 5등급제 2등급 = 상위 10~34%의 가운데 22%)로 보고, 그 사이는 직선으로 이었습니다.</p>
+    </div>
+    <div class="convbox">
+      <h3>수시 · 등급별 구간 대응</h3>
+      <p class="faint">같은 누적 비율에 해당하는 상대 쪽 등급입니다.</p>
+      <div class="tw"><table class="t">
+        <thead><tr><th>5등급제</th><th>누적 비율</th><th>9등급제로 보면</th></tr></thead>
+        <tbody>
+          <tr><td class="b">1등급</td><td>상위 10%까지</td><td>1등급 ~ 2등급 대부분</td></tr>
+          <tr><td class="b">2등급</td><td>10~34%</td><td>2등급 끝 ~ 3등급 ~ 4등급 앞쪽</td></tr>
+          <tr><td class="b">3등급</td><td>34~66%</td><td>4등급 뒤쪽 ~ 5등급 ~ 6등급 앞쪽</td></tr>
+          <tr><td class="b">4등급</td><td>66~90%</td><td>6등급 뒤쪽 ~ 7등급 ~ 8등급 앞쪽</td></tr>
+          <tr><td class="b">5등급</td><td>90~100%</td><td>8등급 대부분 ~ 9등급</td></tr>
+        </tbody>
+      </table></div>
+      <div class="tw"><table class="t">
+        <thead><tr><th>9등급제</th><th>누적 비율</th><th>5등급제로 보면</th></tr></thead>
+        <tbody>
+          <tr><td class="b">1</td><td>~4%</td><td>1</td></tr>
+          <tr><td class="b">2</td><td>4~11%</td><td>1 (10%까지) · 2</td></tr>
+          <tr><td class="b">3</td><td>11~23%</td><td>2</td></tr>
+          <tr><td class="b">4</td><td>23~40%</td><td>2 (34%까지) · 3</td></tr>
+          <tr><td class="b">5</td><td>40~60%</td><td>3</td></tr>
+          <tr><td class="b">6</td><td>60~77%</td><td>3 (66%까지) · 4</td></tr>
+          <tr><td class="b">7</td><td>77~89%</td><td>4</td></tr>
+          <tr><td class="b">8</td><td>89~96%</td><td>4 (90%까지) · 5</td></tr>
+          <tr><td class="b">9</td><td>96~100%</td><td>5</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="convbox">
+      <h3>정시 · 수능 백분위 → 등급</h3>
+      <p class="faint">상대평가 과목(국어·수학·탐구)의 등급 구분 비율 기준입니다. 영어·한국사는 절대평가라 해당되지 않습니다.</p>
+      <div class="convcalc">
+        <label for="cv_pct">수능 백분위</label>
+        <input id="cv_pct" type="number" min="0" max="100" step="0.1" placeholder="예: 79.5">
+        <output id="cv_pct_out">→ 해당 등급</output>
+      </div>
+      <div class="tw"><table class="t">
+        <thead><tr><th>수능 등급</th><th>누적 비율</th><th>백분위 (대략)</th></tr></thead>
+        <tbody>
+          <tr><td class="b">1등급</td><td>상위 4%</td><td>96 ~ 100</td></tr>
+          <tr><td class="b">2등급</td><td>4~11%</td><td>89 ~ 95</td></tr>
+          <tr><td class="b">3등급</td><td>11~23%</td><td>77 ~ 88</td></tr>
+          <tr><td class="b">4등급</td><td>23~40%</td><td>60 ~ 76</td></tr>
+          <tr><td class="b">5등급</td><td>40~60%</td><td>40 ~ 59</td></tr>
+          <tr><td class="b">6등급</td><td>60~77%</td><td>23 ~ 39</td></tr>
+          <tr><td class="b">7등급</td><td>77~89%</td><td>11 ~ 22</td></tr>
+          <tr><td class="b">8등급</td><td>89~96%</td><td>4 ~ 10</td></tr>
+          <tr><td class="b">9등급</td><td>96~100%</td><td>0 ~ 3</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+  <p class="faint">환산값은 학생 전체가 등급 비율대로 나뉜다는 가정의 근사입니다. 5등급제에서는 같은 상위 %여도 학교·과목 구성에 따라 실제 대학 환산이 달라질 수 있으니 대조용으로만 쓰세요. 실제 수능 등급컷 백분위는 과목·해마다 동점자 때문에 1점 안팎 달라집니다.</p>
+</div>
+</section>
+
+<section class="band light" id="offices">
+  <div class="wrap">
+    <div class="head rv"><h2>대학 입학처 바로가기</h2><p class="lead">모집요강과 최신 입결은 여기서 직접 확인하세요.</p></div>
+    <div class="tw" style="max-height:none"><table class="t" data-source="h_univ" data-row-key="key">
+      <thead><tr><th data-field="대학명">대학</th><th data-field="학년도들">자료가 있는 학년도</th><th data-field="전형수">실기 전형 수</th><th data-field="입학처URL">입학처 홈페이지</th></tr></thead>
+      <tbody data-draw="t_offices"></tbody></table></div>
+  </div>
+</section>
+
+<section class="band" id="about">
+  <div class="wrap">
+    <div class="head rv"><h2>자료와 한계</h2><p class="lead">어디서 가져왔고, 무엇이 빠졌는지 적었어요.</p></div>
+    <ul class="lim">
+
+    <li>값은 각 대학 입학처 홈페이지 입시결과 게시판의 원문 파일(PDF·엑셀)에서 옮겼습니다(확인 2026-11-24). 2026-11-25에 진학사 입시자료실(대학별 입시결과·모집요강 파일)과 모든 학교를 대조했고, 입학처에 없던 값 중 진학사에 올라온 대학 발표 파일에만 있는 값은 자료명·비고에 “진학사 입시자료실 게시 파일”로 표시해 넣었습니다(국민대 2025 정시 성적, 서울여대 2024·2025). 대입정보포털 어디가 값은 쓰지 않았습니다.</li>
+    <li>대학마다 기준(최종등록자·최종합격자·전체 합격자)과 내신 계산 과목이 달라, 대학끼리 순위를 매기면 안 됩니다. 같은 전형의 연도별 변화를 보는 데 쓰세요.</li>
+    <li>일부 대학은 그 해 자료가 없습니다: 중앙대 2024 수시 실기형·2026 정시 실기형, 강남대 2026, 수원대 2024 수시, 세종대 2024·2025 수시, 숙명여대 정시(실기 전형 결과 미게시), 가천대 정시(엑셀 파일에 암호 설정).</li>
+    <li>국민대는 입학처에 경쟁률만 있어, 진학사에 게시된 2025 정시 결과 파일의 수능 백분위(전체평균·70%컷)를 넣었습니다. 2024·2026 정시와 수시 실기 성적은 진학사에도 없습니다. 서울여대 2024·2025는 입학처 발행 안내 책자(진학사 게시)에서 넣었습니다. 삼육대·인천대·홍익대·한성대·청주대·충남대·국립공주대는 진학사 파일을 받았지만 실기 전형 여부를 모집요강으로 확인하지 못해 아직 넣지 않았습니다.</li>
+    <li>입학처에서 확인했지만 넣지 않은 대학: 서울시립대(수시 실기전형은 성악뿐이고 정시 전형결과 파일에 디자인학과가 없음), 한성대(공개한 성적 자료에 디자인 실기전형 없음), 고려대(경쟁률을 외부 링크로만 공개), 성균관대(2026 경쟁률·충원만 게시, 성적 미공개), 예원예술대(2026만 게시, 캠퍼스 구분 없음), 협성대(파일 없이 성적 계산기 안에서만 제공), 한경국립대(실기전형 결과 미공개).</li>
+    <li>서울대·이화여대·경희대는 합격 성적을 공개하지 않아 경쟁률(과 충원)만 넣었습니다. 서울대·이화여대 값은 원서접수 마감 기준 경쟁률입니다. 단국대·상명대 천안캠퍼스는 충남이지만 함께 보도록 넣었고, 지역을 “충남”으로 표시했습니다. 건국대 글로컬캠퍼스(충북 충주)도 같은 이유로 넣었고, 건국대 서울캠퍼스 커뮤니케이션·산업·리빙·의상디자인(예체능계)학과 정시는 수능 60% + 실기 40%입니다(2026학년도 정시모집요강). 의상디자인학과(인문계)만 수능 100%라 “비실기(수능 100%)”로 표시했습니다. 글로컬은 수시 실기우수자는 실기 100%라 경쟁률·추가합격 번호만, 정시는 수능 백분위 50%·최저 값만 공개합니다. 한양대 ERICA 디자인계열은 2025학년도부터 정시 가군으로 모집해 2024 자료가 없습니다.</li>
+    <li>정시는 가능하면 대학별 환산점수 대신 수능 백분위 평균으로 보여 줍니다. 건국대 서울캠퍼스 2025·2026학년도와 서경대는 원문의 과목(영역)별 백분위를 평균 낸 계산값이고(비고에 표시), 원래 환산점수·총점은 “그 밖의 공개값”에 남겼습니다. 강남대·경기대·대진대·덕성여대·동덕여대·명지대·수원대·중앙대와 세종대 2024·2025는 원문에 과목별 백분위가 없어 대학이 공개한 점수를 그대로 둡니다.</li>
+    <li>추가로 확인한 학교: 호서대·백석대(충남), 한남대(대전)는 3년 성적을 넣었습니다. 동덕여대 수시는 대학이 성적을 공개하지 않아 경쟁률·충원만 넣었습니다. 가천대 정시 2024·2025 엑셀은 암호가 걸려 열지 못했고 2026 정시 결과에는 디자인 계열이 없습니다. 한양대 서울캠 응용미술교육과(수시 실기/실적)는 입학처 3개년 자료집에 실기 전형 결과가 없고, 홍익대 세종캠은 실기고사 없는 전형으로 선발, 연세대 미래캠은 입시결과를 영상으로만 공개, 동국대 WISE캠 2026 수시 결과에는 디자인 실기 행이 없어 넣지 못했습니다.</li>
+    <li>대학마다 공개 방식이 다릅니다: 신한대는 원문에 기준(최종등록자 등)을 적지 않았고 “가장 낮은” 값은 원문의 커트라인입니다. 용인대는 평균 대신 최고·50%·70% 값을, 서울과기대 수시는 입학생 평균만 공개합니다. 한세대는 2025학년도부터 디자인 3개 학과를 디자인학부로 합쳐 모집합니다.</li>
+    <li>모집단위 이름이 바뀐 곳(예: 명지대 2024 시각디자인전공 → 2025 비주얼커뮤니케이션디자인전공)은 비고에 적었고, 3년 비교 표에서는 이름이 같은 전형끼리만 묶었습니다.</li>
+      <li>“학교마다 실기 비중이 달라요”의 비율은 2027학년도 모집요강(진학사 입시자료실 게시본)이나 대학 입결 원문에 적힌 값만 넣었습니다. 요강 표가 텍스트로 깨지거나 요강을 받지 못한 전형은 “확인 필요”로 두었습니다. 2027 비율이 2024–2026과 다를 수 있습니다(예: 세종대 패션디자인 정시 2026 수능 50·실기 30·교과 20 → 2027 실기 50·수능 40·교과 10).</li>
+
+    </ul>
+  </div>
+</section>
+<footer class="foot">2024–2026학년도 입시결과 · 대학 입학처 원문 기준(일부 진학사 입시자료실 게시 파일, 비고에 표시) · 확인일 2026-11-25 · 지원 전 입학처 원문을 꼭 확인하세요</footer>
+</div>
+
+<script>
+dash.calc('h_avgdots', { title: '학교별 평균 성적(전형별 평균값·50%·70% 위치값)', description: '대학이 평균·50% 위치·70% 위치 값을 공개한 실기전형: 수시 내신·학생부 등급(지표가 “내신 등급”/“학생부 등급”으로 시작) 또는 정시 수능 백분위(지표가 “수능 백분위”로 시작). 한 줄 = 전형 하나의 평균값', inputs: ['history'], fn: (history) => {
+  const out = [];
+  for (const r of history) {
+    const m = r['지표'] || '';
+    const fam = r['전형시기'] === '수시' && /^(내신|학생부) 등급/.test(m) ? 'grade' : /^수능 백분위/.test(m) ? 'pct' : null;
+    if (!fam) continue;
+    const v = parseFloat(String(r['평균'] || '').replace(/[^0-9.]/g, ''));
+    out.push({ fam, 학년도: r['학년도'], 대학명: (r['대학명'] + ((/캠퍼스/.test(r['캠퍼스'] || '') && !/ERICA/.test(r['대학명'])) ? ' ' + r['캠퍼스'].replace('캠퍼스', '캠') : '')), 모집단위: r['모집단위'], 전형명: r['전형명'] + (r['세부'] ? ' · ' + r['세부'] : ''), 지표: m, 기준: r['기준'], v: isFinite(v) ? v : null, v70: isFinite(parseFloat(r['70%'])) ? parseFloat(r['70%']) : null, v50: isFinite(parseFloat(r['50%'])) ? parseFloat(r['50%']) : null });
+  }
+  return out;
+} });
+</script>
+
+<script>
+window.HA = window.HA || { fam: 'grade', year: '2026', basis: 'avg' };
+HA.label = () => ({ avg: '평균', p50: '50% 위치', p70: '70% 위치' })[HA.basis] || '평균';
+HA.pick = (r) => ({ ...r, v: HA.basis === 'p70' ? r.v70 : HA.basis === 'p50' ? r.v50 : r.v });
+for (const b of document.querySelectorAll('#avg [data-fam]')) b.addEventListener('click', () => {
+  HA.fam = b.dataset.fam;
+  for (const x of document.querySelectorAll('#avg [data-fam]')) x.setAttribute('aria-pressed', String(x === b));
+  dash.draw('avgchart'); dash.draw('avgnote');
+});
+for (const b of document.querySelectorAll('#avg [data-basis]')) b.addEventListener('click', () => {
+  HA.basis = b.dataset.basis;
+  for (const x of document.querySelectorAll('#avg [data-basis]')) x.setAttribute('aria-pressed', String(x === b));
+  dash.draw('avgchart'); dash.draw('avgnote');
+});
+dash.draw('a_year', (sel) => {
+  sel.replaceChildren(...['2024', '2025', '2026'].map((y) => new Option(y + '학년도', y)));
+  sel.value = HA.year;
+  sel.onchange = () => { HA.year = sel.value; dash.draw('avgchart'); dash.draw('avgnote'); };
+});
+dash.draw('avgnote', (el) => {
+  const d = dash.data('h_avgdots');
+  if (d.status !== 'ok') { el.textContent = ''; return; }
+  const rows = d.data.map(HA.pick).filter((r) => r.fam === HA.fam && String(r.학년도) === HA.year);
+  const shown = new Set(rows.filter((r) => r.v !== null).map((r) => r.대학명));
+  const miss = [...new Set(rows.filter((r) => r.v === null && !shown.has(r.대학명)).map((r) => r.대학명))].sort((a, b) => a.localeCompare(b, 'ko'));
+  el.textContent = (miss.length ? (HA.label() + (HA.basis === 'avg' ? '을' : ' 값을')) + ' 공개하지 않아 빠진 학교: ' + miss.join(', ') + '. ' : '') + (HA.fam === 'pct' ? '정시는 대부분 대학이 자체 환산점수만 공개해 수능 백분위로 비교할 수 있는 학교가 적습니다.' : '내신 등급은 1등급이 가장 좋습니다. 대학마다 반영 과목이 다릅니다.');
+});
+dash.draw('avgchart', (box) => {
+  const d = dash.data('h_avgdots');
+  box.replaceChildren();
+  box.classList.toggle('dash-skeleton', d.status === 'loading');
+  if (d.status !== 'ok') { if (d.status === 'error') box.textContent = '자료를 불러오지 못했습니다.'; return; }
+  const rows = d.data.map(HA.pick).filter((r) => r.fam === HA.fam && String(r.학년도) === HA.year && r.v !== null);
+  if (!rows.length) { const p = document.createElement('p'); p.className = 'muted'; p.textContent = '이 학년도에는 ' + (HA.label() + (HA.basis === 'avg' ? '을' : ' 값을')) + ' 공개한 학교가 없습니다.'; box.appendChild(p); return; }
+  const by = d3.group(rows, (r) => r.대학명);
+  const names = [...by.keys()].sort((a, b) => a.localeCompare(b, 'ko'));
+  const grade = HA.fam === 'grade';
+  const W = Math.max(320, box.clientWidth || 640), rowH = 36, mt = 10, mb = 44;
+  const ml = Math.min(150, Math.max(92, W * 0.22)), mr = 58;
+  const H = mt + names.length * rowH + mb;
+  const vals = rows.map((r) => r.v);
+  let lo = d3.min(vals), hi = d3.max(vals); const pad = grade ? 0.3 : 3;
+  lo -= pad; hi += pad; if (!grade) hi = Math.min(100, hi);
+  const x = d3.scaleLinear().domain(grade ? [hi, lo] : [lo, hi]).range([ml, W - mr]).nice();
+  const y = (i) => mt + i * rowH + rowH / 2;
+  const svg = d3.create('svg').attr('width', W).attr('height', H).attr('viewBox', `0 0 ${W} ${H}`);
+  const ticks = x.ticks(Math.max(3, Math.floor((W - ml - mr) / 70)));
+  svg.append('g').selectAll('line').data(ticks).join('line').attr('x1', (t) => x(t)).attr('x2', (t) => x(t)).attr('y1', mt).attr('y2', H - mb + 4).style('stroke', 'rgba(11,11,20,.08)');
+  svg.append('g').selectAll('text').data(ticks).join('text').attr('class', 'tick-t').attr('x', (t) => x(t)).attr('y', H - mb + 20).attr('text-anchor', 'middle').text((t) => grade ? t.toFixed(1) : t);
+  svg.append('text').attr('class', 'lbl').attr('x', (ml + W - mr) / 2).attr('y', H - 6).attr('text-anchor', 'middle').text(grade ? '← 숫자 큰 등급 · 등급(' + HA.label() + ') · 1등급에 가까움 →' : '← 낮음 · 수능 백분위(' + HA.label() + ') · 높음 →');
+  const tip = document.createElement('div'); tip.className = 'tip'; box.appendChild(tip);
+  const show = (ev, html) => { tip.innerHTML = html; tip.style.display = 'block'; const b = box.getBoundingClientRect(); let lx = ev.clientX - b.left + 12; if (lx > b.width - 250) lx = ev.clientX - b.left - 250; tip.style.left = Math.max(0, lx) + 'px'; tip.style.top = (ev.clientY - b.top + 12) + 'px'; };
+  const hide = () => { tip.style.display = 'none'; };
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const fmt = (v) => grade ? v.toFixed(2) : v.toFixed(1);
+  names.forEach((n, i) => {
+    const g = svg.append('g');
+    const tr = by.get(n); const vs = tr.map((r) => r.v); const mean = d3.mean(vs);
+    if (i % 2 === 0) g.append('rect').attr('x', 0).attr('y', mt + i * rowH).attr('width', W).attr('height', rowH).style('fill', 'rgba(11,11,20,.03)');
+    g.append('text').attr('class', 'lbl name').attr('x', ml - 12).attr('y', y(i) + 4).attr('text-anchor', 'end').text(n.replace(/대학교/, '대'));
+    if (vs.length > 1) g.append('line').attr('x1', x(d3.min(vs))).attr('x2', x(d3.max(vs))).attr('y1', y(i)).attr('y2', y(i)).style('stroke', 'rgba(61,82,255,.3)').style('stroke-width', 2).style('stroke-linecap', 'round');
+    g.selectAll('circle.t').data(tr).join('circle').attr('class', 't').attr('cx', (r) => x(r.v)).attr('cy', y(i)).attr('r', 4.5).style('fill', 'rgba(11,11,20,.3)').style('stroke', '#fff').style('stroke-width', 1.5)
+      .on('mousemove', (ev, r) => show(ev, `<b>${esc(n)}</b><br>${esc(r.모집단위)} · ${esc(r.전형명)}<br>${esc(r.지표)} ${HA.label()} <b>${fmt(r.v)}</b><br><span style="opacity:.7">기준: ${esc(r.기준)}</span>`)).on('mouseleave', hide);
+    g.append('circle').attr('cx', x(mean)).attr('cy', y(i)).attr('r', 8).style('fill', 'url(#hpGrad)').style('stroke', '#fff').style('stroke-width', 2)
+      .on('mousemove', (ev) => show(ev, `<b>${esc(n)}</b> 학교 평균 <b>${fmt(mean)}</b><br>전형 ${vs.length}개의 단순 평균`)).on('mouseleave', hide);
+    g.append('text').attr('class', 'val').attr('x', W - mr + 10).attr('y', y(i) + 4).text(fmt(mean));
+  });
+  box.appendChild(svg.node());
+});
+if (!window.__haResize) { window.__haResize = true; let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => dash.draw('avgchart'), 150); }); }
+</script>
+
+<script>
+(function () {
+  const C9 = [4, 11, 23, 40, 60, 77, 89, 96, 100];
+  const C5 = [10, 34, 66, 90, 100];
+  const mid = (C) => C.map((h, i) => ((i ? C[i - 1] : 0) + h) / 2);
+  const M9 = mid(C9), M5 = mid(C5);
+  const g5cum = (g) => { const i = Math.min(3, Math.max(0, Math.floor(g) - 1)); return M5[i] + (M5[i + 1] - M5[i]) * Math.min(1, Math.max(0, g - (i + 1))); };
+  const cum9g = (c) => { if (c <= M9[0]) return 1; if (c >= M9[8]) return 9; let i = 0; while (c > M9[i + 1]) i++; return i + 1 + (c - M9[i]) / (M9[i + 1] - M9[i]); };
+  const near = (g9) => {
+    try {
+      const d = dash.data('h_avgdots'); if (d.status !== 'ok') return '';
+      const by = {};
+      for (const r of d.data) if (r.fam === 'grade' && String(r.학년도) === '2026' && r.v !== null) (by[r.대학명] = by[r.대학명] || []).push(r.v);
+      const list = Object.entries(by).map(([n, vs]) => [n, vs.reduce((a, b) => a + b, 0) / vs.length]).filter(([, m]) => Math.abs(m - g9) <= 0.5).sort((a, b) => a[1] - b[1]);
+      return list.length ? ' · 2026 수시 내신 평균이 ±0.5 안인 학교: ' + list.map(([n, m]) => `${n.replace(/대학교/, '대')} ${m.toFixed(2)}`).join(', ') : ' · 2026 수시 내신 평균이 ±0.5 안인 학교 없음';
+    } catch (e) { return ''; }
+  };
+  for (const el of document.querySelectorAll('#cv_g5')) el.addEventListener('input', () => {
+    const out = el.parentElement.querySelector('output'); const g = parseFloat(el.value);
+    if (!isFinite(g) || g < 1 || g > 5) { out.textContent = '→ 1~5 사이 숫자를 넣어 주세요'; return; }
+    const c = g5cum(g), g9 = cum9g(c);
+    out.textContent = `→ 대략 상위 ${c.toFixed(0)}% · 9등급제 약 ${g9.toFixed(2)}등급` + near(g9);
+  });
+  const gradeOfPct = (p) => C9.findIndex((c) => 100 - p <= c) + 1;
+  for (const el of document.querySelectorAll('#cv_pct')) el.addEventListener('input', () => {
+    const out = el.parentElement.querySelector('output'); const p = parseFloat(el.value);
+    if (!isFinite(p) || p < 0 || p > 100) { out.textContent = '→ 0~100 사이 숫자를 넣어 주세요'; return; }
+    out.textContent = `→ 대략 ${gradeOfPct(p)}등급 (상위 ${(100 - p).toFixed(1)}%)`;
+  });
+})();
+</script>
+
+<script>
+window.HH = window.HH || { univ: '', sigi: '', year: '', q: '', pu: '', ps: '' };
+HH.num = (s) => { const m = String(s ?? '').match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : null; };
+HH.isGrade = (m) => /등급/.test(m || '') && !/환산점수|점수/.test(m || '');
+HH.show = (id) => { for (const el of document.querySelectorAll('#' + id)) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+</script>
+
+<script>
+dash.calc('h_kpi', { title: '3개년 핵심 개수', description: '입학처 원문 자료의 대학 수, 실기전형 수(대학·모집단위·시기·전형·세부), 자료 줄 수, 3년 모두 있는 전형 수', inputs: ['history'], fn: (history) => {
+  const tk = (r) => [r['대학명'], r['모집단위'], r['전형시기'], r['전형명'], r['세부']].join('|');
+  const years = new Map();
+  for (const r of history) { const k = tk(r); if (!years.has(k)) years.set(k, new Set()); years.get(k).add(r['학년도']); }
+  return [{ univs: new Set(history.map((r) => r['대학명'])).size, tracks: years.size, rows: history.length, full3: [...years.values()].filter((s) => s.size >= 3).length }];
+} });
+
+dash.calc('h_pivot', { title: '전형별 3년 비교', description: '대학·모집단위·시기·전형·세부·성적 종류별로 2024~2026 대표값(평균 → 70% → 50% → 가장 낮은 순)과 경쟁률을 나란히 놓은 표', inputs: ['history'], fn: (history) => {
+  const pick = (r) => { for (const [k, lab] of [['평균', '평균'], ['70%', '70%'], ['50%', '50%'], ['최저', '가장 낮은']]) { const v = String(r[k] || '').trim(); if (v) return { v, lab }; } return null; };
+  const g = new Map();
+  for (const r of history) {
+    const key = [r['대학명'], r['모집단위'], r['전형시기'], r['전형명'], r['세부'], r['지표']].join('|');
+    if (!g.has(key)) g.set(key, { key, 대학명: (r['대학명'] + ((/캠퍼스/.test(r['캠퍼스'] || '') && !/ERICA/.test(r['대학명'])) ? ' ' + r['캠퍼스'].replace('캠퍼스', '캠') : '')), 모집단위: r['모집단위'], 전형시기: r['전형시기'], 전형명: r['전형명'] + (r['세부'] ? ' · ' + r['세부'] : ''), 지표: r['지표'], y2024: '', y2025: '', y2026: '', c2024: '', c2025: '', c2026: '' });
+    const o = g.get(key); const p = pick(r);
+    if (p) o['y' + r['학년도']] = p.v + ' (' + p.lab + ')';
+    if (r['경쟁률']) o['c' + r['학년도']] = r['경쟁률'];
+  }
+  return [...g.values()].sort((a, b) => (a.대학명 + a.모집단위 + a.전형시기).localeCompare(b.대학명 + b.모집단위 + b.전형시기, 'ko'));
+} });
+
+dash.calc('h_rise', { title: '경쟁률 상승 폭이 가장 큰 전형', description: '같은 대학·모집단위·시기·전형·세부의 2024 대비 2026 경쟁률 차이가 가장 큰 전형', inputs: ['history'], fn: (history) => {
+  const g = new Map();
+  for (const r of history) {
+    const v = parseFloat(String(r['경쟁률'] || '').replace(/[^0-9.]/g, '')); if (!isFinite(v)) continue;
+    const k = [r['대학명'], r['모집단위'], r['전형시기'], r['전형명'], r['세부']].join('|');
+    if (!g.has(k)) g.set(k, { 대학명: r['대학명'], 모집단위: r['모집단위'], 전형시기: r['전형시기'] }); g.get(k)['y' + r['학년도']] = v;
+  }
+  const c = [...g.values()].filter((o) => o.y2024 !== undefined && o.y2026 !== undefined).map((o) => ({ ...o, rise: Math.round((o.y2026 - o.y2024) * 100) / 100 }));
+  if (!c.length) return [{ rise: null, from: null, to: null, 대학명: '', 모집단위: '', 전형시기: '' }];
+  const t = c.reduce((a, b) => (b.rise > a.rise ? b : a));
+  return [{ rise: t.rise, from: t.y2024, to: t.y2026, 대학명: t.대학명, 모집단위: t.모집단위, 전형시기: t.전형시기 }];
+} });
+
+dash.calc('h_low', { title: '공개된 가장 낮은 합격 내신', description: '내신 등급 지표의 “가장 낮은” 값 중 가장 큰 등급과 그 전형·학년도', inputs: ['history'], fn: (history) => {
+  const c = history.filter((r) => /내신 등급/.test(r['지표'] || '') && /^\d/.test(String(r['최저'] || '').trim())).map((r) => ({ v: parseFloat(r['최저']), r }));
+  if (!c.length) return [{ v: null, 대학명: '', 모집단위: '', 학년도: '', 전형시기: '', 기준: '' }];
+  const t = c.reduce((a, b) => (b.v > a.v ? b : a));
+  return [{ v: t.v, 대학명: t.r['대학명'], 모집단위: t.r['모집단위'], 학년도: t.r['학년도'], 전형시기: t.r['전형시기'], 기준: t.r['기준'] }];
+} });
+
+dash.calc('h_rows', { title: '전체 자료(캠퍼스별 이름)', description: '입학처 원문 자료 전체에 캠퍼스를 붙인 학교 이름(학교)을 더한 표', inputs: ['history'], fn: (history) => history.map((r) => ({ ...r, 학교: (r['대학명'] + ((/캠퍼스/.test(r['캠퍼스'] || '') && !/ERICA/.test(r['대학명'])) ? ' ' + r['캠퍼스'].replace('캠퍼스', '캠') : '')) })) });
+
+dash.calc('h_univ', { title: '대학별 요약', description: '대학별 자료가 있는 학년도, 실기 전형 수, 입학처 홈페이지', inputs: ['history'], fn: (history) => {
+  const g = new Map();
+  for (const r of history) {
+    const k = (r['대학명'] + ((/캠퍼스/.test(r['캠퍼스'] || '') && !/ERICA/.test(r['대학명'])) ? ' ' + r['캠퍼스'].replace('캠퍼스', '캠') : ''));
+    if (!g.has(k)) g.set(k, { key: k, 대학명: k, base: r['대학명'], camp: r['캠퍼스'] || '', 지역: r['지역'], 입학처URL: r['입학처URL'], ys: new Set(), tr: new Set(), units: new Set() });
+    const o = g.get(k); o.ys.add(r['학년도']); o.tr.add([r['모집단위'], r['전형시기'], r['전형명'], r['세부']].join('|')); o.units.add(r['모집단위']);
+  }
+  return [...g.values()].map((o) => ({ key: o.key, 대학명: o.대학명, base: o.base, 지역: o.지역, 입학처URL: o.입학처URL, 학년도들: [...o.ys].sort().join(' · '), 전형수: o.tr.size, 모집단위: [...o.units].join(', ') })).sort((a, b) => a.대학명.localeCompare(b.대학명, 'ko'));
+} });
+</script>
+
+<script>
+const HH_one = (name, src, field) => dash.draw(name, (el) => {
+  const d = dash.data(src);
+  el.classList.toggle('dash-skeleton', d.status === 'loading');
+  const v = d.status === 'ok' && d.data[0] ? d.data[0][field] : null;
+  el.textContent = v === null || v === undefined || v === '' ? '—' : (typeof v === 'number' ? v.toLocaleString('ko-KR', { maximumFractionDigits: 2 }) : String(v));
+  if (el.hasAttribute('data-count') && window.HH && HH.count) HH.count(el);
+});
+HH_one('k_univs', 'h_kpi', 'univs'); HH_one('k_tracks', 'h_kpi', 'tracks'); HH_one('k_rows', 'h_kpi', 'rows'); HH_one('k_full3', 'h_kpi', 'full3'); HH_one('r_full3', 'h_kpi', 'full3');
+HH_one('u_rise', 'h_rise', 'rise'); HH_one('u_rise_from', 'h_rise', 'from'); HH_one('u_rise_to', 'h_rise', 'to'); HH_one('u_low', 'h_low', 'v');
+dash.draw('u_rise_name', (el) => { const d = dash.data('h_rise'); const r = d.status === 'ok' && d.data[0]; el.textContent = r && r.대학명 ? r.대학명 + ' ' + r.모집단위 + ' (' + r.전형시기 + ')' : '—'; });
+dash.draw('u_low_name', (el) => { const d = dash.data('h_low'); const r = d.status === 'ok' && d.data[0]; el.textContent = r && r.대학명 ? r.대학명 + ' ' + r.모집단위 + ' (' + r.학년도 + ' ' + r.전형시기 + ', ' + r.기준 + ')' : '—'; });
+
+const HH_sel = (name, label, src, field, key, redraw) => dash.draw(name, (sel) => {
+  const d = dash.data(src);
+  const vals = d.status === 'ok' ? [...new Set(d.data.map((r) => r[field]).filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b), 'ko')) : [];
+  sel.replaceChildren(new Option(label, ''), ...vals.map((v) => new Option(v, v)));
+  sel.value = HH[key] || '';
+  sel.onchange = () => { HH[key] = sel.value; redraw.forEach((n) => dash.draw(n)); };
+});
+HH_sel('p_univ', '대학 전체', 'h_pivot', '대학명', 'pu', ['pivot', 'p_count']);
+HH_sel('p_sigi', '수시·정시 전체', 'h_pivot', '전형시기', 'ps', ['pivot', 'p_count']);
+HH_sel('f_year', '학년도 전체', 'history', '학년도', 'year', ['maintable', 'f_count']);
+HH_sel('f_univ', '대학 전체', 'h_rows', '학교', 'univ', ['maintable', 'f_count']);
+HH_sel('f_sigi', '수시·정시 전체', 'history', '전형시기', 'sigi', ['maintable', 'f_count']);
+for (const el of document.querySelectorAll('#f_q')) el.addEventListener('input', () => { HH.q = el.value; dash.draw('maintable'); dash.draw('f_count'); });
+
+HH.pivotRows = () => { const d = dash.data('h_pivot'); return d.status === 'ok' ? d.data.filter((r) => (!HH.pu || r.대학명 === HH.pu) && (!HH.ps || r.전형시기 === HH.ps)) : null; };
+dash.draw('p_count', (el) => { const r = HH.pivotRows(); el.textContent = r ? r.length.toLocaleString('ko-KR') + '줄' : '—'; });
+dash.draw('pivot', (tb) => {
+  tb.replaceChildren();
+  const rows = HH.pivotRows();
+  if (!rows) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 12; td.textContent = dash.data('h_pivot').status === 'error' ? '자료를 불러오지 못했습니다.' : '불러오는 중…'; tr.appendChild(td); tb.appendChild(tr); return; }
+  for (const r of rows) {
+    const tr = document.createElement('tr'); tr.dataset.key = r.key;
+    for (const c of ['대학명', '모집단위', '전형시기', '전형명', '지표', 'y2024', 'y2025', 'y2026', '흐름', 'c2024', 'c2025', 'c2026']) {
+      const td = document.createElement('td');
+      if (c === '흐름') {
+        const vals = ['y2024', 'y2025', 'y2026'].map((k) => HH.num(r[k]));
+        const pts = vals.map((v, i) => [i, v]).filter((p) => p[1] !== null);
+        if (pts.length >= 2) {
+          const W = 70, H = 22, lo = Math.min(...pts.map((p) => p[1])), hi = Math.max(...pts.map((p) => p[1]));
+          const inv = HH.isGrade(r.지표);
+          const y = (v) => hi === lo ? H / 2 : (inv ? 3 + (v - lo) / (hi - lo) * (H - 6) : H - 3 - (v - lo) / (hi - lo) * (H - 6));
+          const svg = d3.create('svg').attr('width', W).attr('height', H).attr('role', 'img').attr('aria-label', '2024~2026 흐름: ' + pts.map((p) => (2024 + p[0]) + '년 ' + p[1]).join(', ') + (inv ? ' (위쪽이 더 좋은 등급)' : ''));
+          svg.append('path').attr('d', d3.line()(pts.map((p) => [5 + p[0] * 30, y(p[1])]))).style('fill', 'none').style('stroke', 'url(#hpGrad)').style('stroke-width', 2);
+          svg.selectAll('circle').data(pts).join('circle').attr('cx', (p) => 5 + p[0] * 30).attr('cy', (p) => y(p[1])).attr('r', 2.6).style('fill', '#8a4dff');
+          td.appendChild(svg.node());
+        } else { td.textContent = '—'; td.className = 'na'; }
+      } else {
+        const v = r[c] ?? '';
+        if (c === '지표') { td.textContent = v; const h = document.createElement('span'); h.className = 'hint'; h.textContent = HH.isGrade(v) ? '작을수록 좋음' : /백분위|점수|총점/.test(v) ? '클수록 좋음' : ''; if (h.textContent) td.appendChild(h); }
+        else { td.textContent = v === '' && /^[yc]20/.test(c) ? '—' : v; if (/^y20/.test(c) && v) td.className = 'b'; if (v === '' && /^[yc]20/.test(c)) td.className = 'na'; }
+      }
+      tr.appendChild(td);
+    }
+    tb.appendChild(tr);
+  }
+});
+
+dash.draw('ucards', (box) => {
+  const d = dash.data('h_univ');
+  box.replaceChildren();
+  if (d.status !== 'ok') { box.textContent = d.status === 'error' ? '대학 목록을 만들지 못했습니다.' : '—'; return; }
+  for (const u of d.data) {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'ucard';
+    const h = document.createElement('h3'); h.textContent = u.대학명; b.appendChild(h);
+    const m = document.createElement('div'); m.className = 'meta'; m.textContent = u.지역 + ' · 실기전형 ' + u.전형수 + '개'; b.appendChild(m);
+    const tags = document.createElement('div');
+    for (const y of ['2024', '2025', '2026']) { const s = document.createElement('span'); s.className = 'pill ' + (u.학년도들.includes(y) ? 'ok' : 'warn'); s.textContent = y; tags.appendChild(s); }
+    b.appendChild(tags);
+    const un = document.createElement('div'); un.className = 'meta'; un.textContent = u.모집단위; b.appendChild(un);
+    b.addEventListener('click', () => { HH.univ = u.대학명; HH.show('results'); dash.draw('maintable'); dash.draw('f_count'); dash.draw('f_univ'); });
+    box.appendChild(b);
+  }
+});
+
+HH.mainRows = () => {
+  const d = dash.data('h_rows'); if (d.status !== 'ok') return null;
+  const q = HH.q.trim().toLowerCase();
+  return d.data.filter((r) => (!HH.year || r['학년도'] === HH.year) && (!HH.univ || r['학교'] === HH.univ) && (!HH.sigi || r['전형시기'] === HH.sigi) && (!q || ((r['모집단위'] || '') + ' ' + (r['전형명'] || '') + ' ' + (r['세부'] || '')).toLowerCase().includes(q)));
+};
+dash.draw('f_count', (el) => { const r = HH.mainRows(); const d = dash.data('h_rows'); el.textContent = r ? r.length.toLocaleString('ko-KR') + ' / ' + d.data.length.toLocaleString('ko-KR') + '줄' : '—'; });
+dash.draw('maintable', (tb) => {
+  tb.replaceChildren();
+  const rows = HH.mainRows();
+  const cols = ['학년도', '학교', '모집단위', '전형시기', '전형명', '세부', '지표', '최고', '평균', '최저', '50%', '70%', '기준', '모집', '지원', '경쟁률', '충원', '기타공개값', '자료명', '비고'];
+  if (!rows) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = cols.length; td.textContent = dash.data('h_rows').status === 'error' ? '자료를 불러오지 못했습니다.' : '불러오는 중…'; tr.appendChild(td); tb.appendChild(tr); return; }
+  const frag = document.createDocumentFragment();
+  for (const r of rows) {
+    const tr = document.createElement('tr'); tr.dataset.key = r.hid;
+    for (const c of cols) {
+      const td = document.createElement('td'); let v = r[c] ?? '';
+      if (c === '자료명' && /^https?:\/\//.test(r['자료URL'] || '')) { const a = document.createElement('a'); a.href = r['자료URL']; a.target = '_blank'; a.rel = 'noopener'; a.textContent = v || '원문 열기'; td.appendChild(a); }
+      else if (c === '지표') { td.textContent = v; const h = document.createElement('span'); h.className = 'hint'; h.textContent = HH.isGrade(v) ? '작을수록 좋음' : /백분위|점수|총점/.test(v) ? '클수록 좋음' : ''; if (h.textContent) td.appendChild(h); }
+      else { if (v === '' && ['최고', '평균', '최저', '50%', '70%'].includes(c)) { v = '미공개'; td.className = 'na'; } td.textContent = v; if (['최고', '평균', '최저'].includes(c) && v !== '미공개') td.className = 'b'; }
+      tr.appendChild(td);
+    }
+    frag.appendChild(tr);
+  }
+  tb.appendChild(frag);
+});
+
+dash.draw('t_offices', (tb) => {
+  const d = dash.data('h_univ');
+  tb.replaceChildren();
+  if (d.status !== 'ok') { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 4; td.textContent = d.status === 'error' ? '목록을 만들지 못했습니다.' : '—'; tr.appendChild(td); tb.appendChild(tr); return; }
+  for (const r of d.data) {
+    const tr = document.createElement('tr'); tr.dataset.key = r.key;
+    for (const c of ['대학명', '학년도들', '전형수', '입학처URL']) {
+      const td = document.createElement('td'); const v = r[c];
+      if (c === '입학처URL' && /^https?:\/\//.test(v || '')) { const a = document.createElement('a'); a.href = v; a.target = '_blank'; a.rel = 'noopener'; a.textContent = v; td.appendChild(a); }
+      else td.textContent = v ?? '';
+      tr.appendChild(td);
+    }
+    tb.appendChild(tr);
+  }
+});
+</script>
+
+<script>
+dash.calc('h_methods', { title: '전형방법(실기 : 성적)', description: '대학·캠퍼스·수시/정시·전형별 실기 비율과 성적 비율, 성적 종류, 실질 반영, 반영 과목, 출처(2027 모집요강 또는 입결 원문)', inputs: ['methods'], fn: (methods) => methods.map((r) => {
+  const camp = r['캠퍼스'] || '';
+  const 학교 = r['대학명'] + ((/캠퍼스/.test(camp) && !/ERICA/.test(r['대학명'])) ? ' ' + camp.replace('캠퍼스', '캠') : '');
+  const s = parseFloat(r['실기비율']), g = parseFloat(r['성적비율']);
+  return { ...r, key: [학교, r['전형시기'], r['전형명']].join('|'), 학교, sil: isFinite(s) ? s : null, sung: isFinite(g) ? g : null, 비율: isFinite(s) ? s + ' : ' + (isFinite(g) ? g : 0) : '확인 필요' };
+}) });
+
+dash.calc('h_cards', { title: '학교 카드', description: '학교(캠퍼스)별 지역, 실기 전형 목록과 각 전형의 실기 : 성적 비율·반영 과목', inputs: ['history', 'methods'], fn: (history, methods) => {
+  const m = methods.map((r) => { const camp = r['캠퍼스'] || ''; const s = parseFloat(r['실기비율']), q = parseFloat(r['성적비율']); return { ...r, 학교: r['대학명'] + ((/캠퍼스/.test(camp) && !/ERICA/.test(r['대학명'])) ? ' ' + camp.replace('캠퍼스', '캠') : ''), sil: isFinite(s) ? s : null, sung: isFinite(q) ? q : null }; });
+  const g = new Map();
+  for (const r of history) {
+    const k = r['대학명'] + ((/캠퍼스/.test(r['캠퍼스'] || '') && !/ERICA/.test(r['대학명'])) ? ' ' + r['캠퍼스'].replace('캠퍼스', '캠') : '');
+    if (!g.has(k)) g.set(k, { key: k, 학교: k, 지역: r['지역'], ys: new Set() });
+    g.get(k).ys.add(r['학년도']);
+  }
+  return [...g.values()].map((o) => ({ key: o.key, 학교: o.학교, 지역: o.지역, 학년도들: [...o.ys].sort().join(' · '), tracks: m.filter((x) => x.학교 === o.학교).sort((a, b) => a.전형시기.localeCompare(b.전형시기, 'ko')) })).sort((a, b) => a.학교.localeCompare(b.학교, 'ko'));
+} });
+</script>
+
+<script>
+dash.draw('k_methods', (el) => { const d = dash.data('h_methods'); el.textContent = d.status === 'ok' ? String(d.data.filter((r) => r.sil !== null).length) : '—'; HH.count && HH.count(el); });
+dash.draw('scards', (box) => {
+  const d = dash.data('h_cards');
+  box.replaceChildren();
+  if (d.status !== 'ok') { box.textContent = d.status === 'error' ? '학교 카드를 만들지 못했어요.' : '불러오는 중…'; return; }
+  for (const u of d.data) {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'scard';
+    const h = document.createElement('h3'); h.textContent = u.학교; b.appendChild(h);
+    const rg = document.createElement('div'); rg.className = 'rg'; rg.textContent = u.지역 + ' · 자료 ' + u.학년도들; b.appendChild(rg);
+    for (const t of u.tracks) {
+      const w = document.createElement('div'); w.className = 'trk';
+      const tl = document.createElement('div'); tl.className = 'tl';
+      const a = document.createElement('span'); a.textContent = t.전형시기 + ' · ' + t.전형명;
+      const c = document.createElement('span'); c.textContent = t.sil !== null ? '실기 ' + t.sil + '% : 성적 ' + (t.sung ?? 0) + '%' : '비율 확인 필요';
+      tl.append(a, c); w.appendChild(tl);
+      const bar = document.createElement('div'); bar.className = 'bar' + (t.sil === null ? ' unk' : '');
+      bar.setAttribute('role', 'img'); bar.setAttribute('aria-label', c.textContent);
+      if (t.sil !== null) { const i1 = document.createElement('i'); i1.style.width = t.sil + '%'; bar.appendChild(i1); if (t.sung) { const i2 = document.createElement('i'); i2.style.width = t.sung + '%'; bar.appendChild(i2); } }
+      w.appendChild(bar);
+      const sj = [t.성적종류, t.반영과목, t.실질반영 ? '실질 ' + t.실질반영 : ''].filter(Boolean).join(' · ');
+      if (sj) { const p = document.createElement('div'); p.className = 'sj'; p.textContent = sj; w.appendChild(p); }
+      b.appendChild(w);
+    }
+    if (!u.tracks.length) { const p = document.createElement('div'); p.className = 'sj'; p.textContent = '전형방법 정보 없음'; b.appendChild(p); }
+    const src = document.createElement('div'); src.className = 'src'; src.textContent = [...new Set(u.tracks.map((t) => t.출처).filter(Boolean))].join(' · ') || '출처: 확인 필요'; b.appendChild(src);
+    b.addEventListener('click', () => { HH.univ = u.학교; HH.show('results'); dash.draw('maintable'); dash.draw('f_count'); dash.draw('f_univ'); });
+    box.appendChild(b);
+  }
+});
+dash.draw('t_methods', (tb) => {
+  const d = dash.data('h_methods');
+  tb.replaceChildren();
+  if (d.status !== 'ok') return;
+  for (const r of [...d.data].sort((a, b) => a.학교.localeCompare(b.학교, 'ko'))) {
+    const tr = document.createElement('tr'); tr.dataset.key = r.key;
+    for (const c of ['학교', '전형시기', '전형명', '비율', '성적종류', '실질반영', '반영과목', '확인상태', '출처', '비고']) { const td = document.createElement('td'); td.textContent = r[c] ?? ''; if (c === '비율') td.className = r.sil !== null ? 'b' : 'na'; tr.appendChild(td); }
+    tb.appendChild(tr);
+  }
+});
+</script>
+
+<script>
+(function () {
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const root = document.querySelector('.hp');
+  /* explainer steps: plain-language text + a small drawing each */
+  const dots = (n, lit, cls) => { let s = ''; for (let i = 0; i < n; i++) { const x = 14 + (i % 20) * 21, y = 14 + Math.floor(i / 20) * 21; s += `<circle cx="${x}" cy="${y}" r="7" class="${lit(i) ? 'on' : 'off'}" style="animation-delay:${i * 6}ms"/>`; } return s; };
+  const S = [
+    { h: '수시와 정시', p: '대학에 지원하는 길은 두 번 있어요. 가을에 먼저 지원하는 게 수시, 수능을 본 뒤 겨울에 지원하는 게 정시예요. 수시는 주로 학교 성적(내신)과 실기, 정시는 주로 수능과 실기를 봐요.', ex: '수시 원서는 9월, 정시 원서는 12월 말~1월 초예요.',
+      v: '<svg viewBox="0 0 440 170" role="img" aria-label="수시는 가을, 정시는 겨울"><rect x="20" y="70" width="400" height="6" rx="3" class="off"/><rect x="20" y="70" width="190" height="6" rx="3" class="on"/><circle cx="120" cy="73" r="14" class="on"/><circle cx="330" cy="73" r="14" class="on"/><text x="120" y="40" text-anchor="middle" style="font-size:16px;font-weight:700">수시 · 9월</text><text x="120" y="118" text-anchor="middle" class="sm">내신 + 실기</text><text x="330" y="40" text-anchor="middle" style="font-size:16px;font-weight:700">정시 · 12월</text><text x="330" y="118" text-anchor="middle" class="sm">수능 + 실기</text><text x="225" y="150" text-anchor="middle" class="sm">11월 수능</text></svg>' },
+    { h: '내신 등급', p: '학교 시험 성적을 1등급부터 9등급까지 나눈 거예요. 1등급이 가장 잘한 거고, 숫자가 커질수록 낮아요. 그래서 “내신 3.5”는 3등급과 4등급 사이라는 뜻이에요.', ex: '100명 중 앞쪽 4명 정도가 1등급이에요. 이 페이지 표는 9등급제 기준이에요.',
+      v: (() => { const pct = [4, 7, 12, 17, 20, 17, 12, 7, 4]; let s = '<svg viewBox="0 0 440 180" role="img" aria-label="1등급부터 9등급까지 비율">'; pct.forEach((p, i) => { const h = p * 6; s += `<rect x="${22 + i * 46}" y="${140 - h}" width="34" height="${h}" rx="6" class="${i === 0 ? 'on' : 'off'}" style="animation-delay:${i * 50}ms"/><text x="${39 + i * 46}" y="160" text-anchor="middle">${i + 1}</text><text x="${39 + i * 46}" y="${132 - h}" text-anchor="middle" class="sm">${p}%</text>`; }); return s + '<text x="220" y="178" text-anchor="middle" class="sm">등급 (왼쪽이 좋아요)</text></svg>'; })() },
+    { h: '수능 백분위', p: '수능에서 나보다 점수가 낮은 학생이 100명 중 몇 명인지 나타낸 숫자예요. 백분위 80이면 100명 중 80명이 나보다 아래라는 뜻이에요. 클수록 좋아요.', ex: '백분위 80 → 100명 줄에서 앞에서 20번째쯤.',
+      v: '<svg viewBox="0 0 440 230" role="img" aria-label="100개의 점 중 80개가 나보다 아래">' + dots(100, (i) => i < 80) + '<text x="220" y="225" text-anchor="middle" class="sm">파란 점 80개 = 나보다 점수가 낮은 학생</text></svg>' },
+    { h: '평균 · 50% · 70%', p: '합격생 100명을 성적순으로 줄 세웠다고 생각해 보세요. 50% 위치는 딱 가운데인 50번째, 70% 위치는 70번째 학생의 성적이에요. 평균은 모두의 성적을 더해서 사람 수로 나눈 값이에요.', ex: '70% 위치 성적이면 합격선 근처라 아슬아슬하고, 50% 위치는 그보다 안정적이에요.',
+      v: '<svg viewBox="0 0 440 230" role="img" aria-label="100명 중 50번째와 70번째 강조">' + dots(100, (i) => i === 49 || i === 69) + '<text x="' + (14 + 9 * 21) + '" y="100" text-anchor="middle" style="font-weight:700">50번째</text><text x="' + (14 + 9 * 21) + '" y="142" text-anchor="middle" style="font-weight:700">70번째</text><text x="220" y="225" text-anchor="middle" class="sm">합격생 100명을 성적순으로 세웠을 때</text></svg>' },
+    { h: '실기 비중', p: '디자인 실기 전형은 그림 시험(실기) 점수와 성적을 섞어서 뽑아요. “실기 80 : 성적 20”이면 실기 점수가 훨씬 중요하다는 뜻이에요. 학교마다 이 비율이 달라요.', ex: '아래 “학교마다 실기 비중이 달라요”에서 학교별 비율을 볼 수 있어요.',
+      v: '<svg viewBox="0 0 440 170" role="img" aria-label="실기 80퍼센트 성적 20퍼센트 막대"><rect x="20" y="60" width="400" height="44" rx="22" class="off"/><rect x="20" y="60" width="320" height="44" rx="22" class="on" style="transform-origin:20px 0;animation:grow 1s cubic-bezier(.2,.8,.2,1) both"/><text x="180" y="88" text-anchor="middle" style="fill:#fff;font-size:16px;font-weight:700">실기 80%</text><text x="382" y="88" text-anchor="middle" style="font-size:14px;font-weight:700">20%</text><text x="220" y="140" text-anchor="middle" class="sm">예: 실기 80 + 성적(내신·수능) 20</text></svg>' }
+  ];
+  root.classList.add('js');
+  const ss = root.querySelector('#storyStatic');
+  if (ss) ss.innerHTML = S.map((s) => `<div class="stage"><div class="vis">${s.v}</div><h3>${s.h}</h3><p>${s.p}</p><div class="ex">${s.ex}</div></div>`).join('');
+  const stage = root.querySelector('#stage'), btns = [...root.querySelectorAll('#steps button')], story = root.querySelector('#story');
+  let cur = -1;
+  const show = (i) => {
+    if (i === cur || !stage) return; cur = i;
+    btns.forEach((b, j) => b.setAttribute('aria-current', String(j === i)));
+    stage.innerHTML = `<div class="vis">${S[i].v}</div><h3>${S[i].h}</h3><p>${S[i].p}</p><div class="ex">${S[i].ex}</div>`;
+    if (!reduce) { stage.classList.remove('swap'); void stage.offsetWidth; stage.classList.add('swap'); stage.querySelectorAll('.vis circle,.vis rect').forEach((c) => { c.style.animation = c.style.animation || 'pop .5s cubic-bezier(.2,.8,.2,1) both'; }); }
+  };
+  show(0);
+  const onScroll = () => { if (!story) return; const r = story.getBoundingClientRect(); const span = r.height - window.innerHeight * 0.8; const p = Math.min(0.999, Math.max(0, -r.top / Math.max(1, span))); show(Math.floor(p * S.length)); };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  btns.forEach((b, j) => b.addEventListener('click', () => { if (!story) return; const top = story.getBoundingClientRect().top + window.scrollY; const span = story.offsetHeight - window.innerHeight * 0.8; window.scrollTo({ top: top + span * (j + 0.5) / S.length, behavior: reduce ? 'auto' : 'smooth' }); show(j); }));
+  /* split section headlines into words for the reveal */
+  root.querySelectorAll('.head h2').forEach((h) => { const words = h.textContent.split(' '); h.textContent = ''; words.forEach((w, i) => { const s = document.createElement('span'); s.className = 'w'; s.style.setProperty('--i', i); s.textContent = w; h.append(s, i < words.length - 1 ? ' ' : ''); }); });
+  /* count-up for numbers */
+  window.HH = window.HH || {};
+  HH.count = (el) => { const t = parseFloat(String(el.textContent).replace(/,/g, '')); if (reduce || !isFinite(t) || el.dataset.counted === String(t)) return; el.dataset.counted = String(t); const t0 = performance.now(), dur = 1100; const step = (now) => { const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3); el.textContent = Math.round(t * e).toLocaleString('ko-KR'); if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); setTimeout(() => { el.textContent = t.toLocaleString('ko-KR'); }, dur + 150); };
+  root.querySelectorAll('[data-count]').forEach((el) => HH.count(el));
+  /* reveal on scroll: only blocks that start below the fold are hidden first */
+  if (reduce || !('IntersectionObserver' in window)) { root.querySelectorAll('.band').forEach((b) => b.classList.add('in')); return; }
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.remove('pre'); e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px' });
+  const vh = window.innerHeight;
+  root.querySelectorAll('.rv, .band').forEach((el) => { if (el.getBoundingClientRect().top > vh * 0.9) { if (el.classList.contains('rv')) el.classList.add('pre'); } else el.classList.add('in'); io.observe(el); });
+})();
+</script>
+
+</div>
+</body>
+</html>
