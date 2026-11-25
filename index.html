@@ -105,6 +105,11 @@ html,body{margin:0;background:#fff}
 .hp .story-static{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
 .hp .story-static .stage{min-height:0}
 .hp .avgbox svg{max-width:100%;height:auto}
+/* caution box for 정시 scores */
+.hp .note{display:flex;gap:14px;align-items:flex-start;background:var(--hp-panel);border:1px solid var(--hp-line);border-radius:16px;padding:16px 18px;margin:0 auto 22px;max-width:860px;text-align:left}
+.hp .note b.ic{flex:none;width:26px;height:26px;border-radius:50%;background:#3d52ff;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800}
+.hp .note p{margin:0;font-size:14px;line-height:1.6;color:var(--hp-fg)}
+.hp .note p span{display:block;color:var(--hp-muted);font-size:13px;margin-top:4px}
 /* number chips */
 .hp .figs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 @media (max-width:900px){.hp .figs{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -265,6 +270,7 @@ html,body{margin:0;background:#fff}
 <section class="band" id="trend">
   <div class="wrap">
     <div class="head rv"><h2>같은 전형, 3년 동안 어떻게 변했을까</h2><p class="lead">한 줄이 한 전형이에요. 평균이 있으면 평균, 없으면 70% → 50% → 가장 낮은 값 순으로 보여 줘요.</p></div>
+    <div class="note" role="note"><b class="ic" aria-hidden="true">!</b><p><strong>정시(수능) 성적은 내 점수와 바로 비교하면 안 돼요.</strong> 여기 나온 정시 평균·50%·70% 값은 대부분 여러 과목(영역) 백분위를 평균 낸 값이거나 대학이 자기 방식으로 바꾼 환산점수예요. 대학마다 반영하는 과목, 과목별 비율, 만점이 달라서 백분위 평균이 같아도 대학별 환산 총점은 달라져요.<span>지원 전에는 꼭 각 대학 입학처의 정시 성적 산출(환산) 프로그램이나 환산표에 내 수능 성적을 직접 넣어 보고, 그 대학 입결과 비교하세요.</span></p></div>
     <div class="controls">
       <select class="dash-select" data-draw="p_univ" aria-label="대학"></select>
       <select class="dash-select" data-draw="p_sigi" aria-label="수시·정시"></select>
@@ -294,6 +300,7 @@ html,body{margin:0;background:#fff}
 <section class="band" id="avg">
   <div class="wrap">
     <div class="head rv"><h2>학교별 평균 성적</h2><p class="lead">버튼으로 평균·50% 위치·70% 위치를 바꿔 보세요. 오른쪽으로 갈수록 좋은 성적이에요.</p></div>
+    <div class="note" role="note"><b class="ic" aria-hidden="true">!</b><p><strong>정시(수능) 성적은 내 점수와 바로 비교하면 안 돼요.</strong> 여기 나온 정시 평균·50%·70% 값은 대부분 여러 과목(영역) 백분위를 평균 낸 값이거나 대학이 자기 방식으로 바꾼 환산점수예요. 대학마다 반영하는 과목, 과목별 비율, 만점이 달라서 백분위 평균이 같아도 대학별 환산 총점은 달라져요.<span>지원 전에는 꼭 각 대학 입학처의 정시 성적 산출(환산) 프로그램이나 환산표에 내 수능 성적을 직접 넣어 보고, 그 대학 입결과 비교하세요.</span></p></div>
     <div class="controls">
       <div class="seg" role="group" aria-label="성적 종류">
         <button type="button" data-fam="grade" aria-pressed="true">수시 내신 등급</button>
@@ -321,6 +328,7 @@ html,body{margin:0;background:#fff}
 <section class="band light" id="results">
   <div class="wrap">
     <div class="head rv"><h2>전체 자료</h2><p class="lead">원문 값 그대로예요. 학교 이름 옆 “○○캠”은 캠퍼스예요. 맨 오른쪽 “원문 자료”를 누르면 출처가 열려요.</p></div>
+    <div class="note" role="note"><b class="ic" aria-hidden="true">!</b><p><strong>정시(수능) 성적은 내 점수와 바로 비교하면 안 돼요.</strong> 여기 나온 정시 평균·50%·70% 값은 대부분 여러 과목(영역) 백분위를 평균 낸 값이거나 대학이 자기 방식으로 바꾼 환산점수예요. 대학마다 반영하는 과목, 과목별 비율, 만점이 달라서 백분위 평균이 같아도 대학별 환산 총점은 달라져요.<span>지원 전에는 꼭 각 대학 입학처의 정시 성적 산출(환산) 프로그램이나 환산표에 내 수능 성적을 직접 넣어 보고, 그 대학 입결과 비교하세요.</span></p></div>
     <div class="controls">
       <select class="dash-select" data-draw="f_year" aria-label="학년도"></select>
       <select class="dash-select" data-draw="f_univ" aria-label="대학"></select>
@@ -456,7 +464,8 @@ html,body{margin:0;background:#fff}
     <li>추가로 확인한 학교: 호서대·백석대(충남), 한남대(대전)는 3년 성적을 넣었습니다. 동덕여대 수시는 대학이 성적을 공개하지 않아 경쟁률·충원만 넣었습니다. 가천대 정시 2024·2025 엑셀은 암호가 걸려 열지 못했고 2026 정시 결과에는 디자인 계열이 없습니다. 한양대 서울캠 응용미술교육과(수시 실기/실적)는 입학처 3개년 자료집에 실기 전형 결과가 없고, 홍익대 세종캠은 실기고사 없는 전형으로 선발, 연세대 미래캠은 입시결과를 영상으로만 공개, 동국대 WISE캠 2026 수시 결과에는 디자인 실기 행이 없어 넣지 못했습니다.</li>
     <li>대학마다 공개 방식이 다릅니다: 신한대는 원문에 기준(최종등록자 등)을 적지 않았고 “가장 낮은” 값은 원문의 커트라인입니다. 용인대는 평균 대신 최고·50%·70% 값을, 서울과기대 수시는 입학생 평균만 공개합니다. 한세대는 2025학년도부터 디자인 3개 학과를 디자인학부로 합쳐 모집합니다.</li>
     <li>모집단위 이름이 바뀐 곳(예: 명지대 2024 시각디자인전공 → 2025 비주얼커뮤니케이션디자인전공)은 비고에 적었고, 3년 비교 표에서는 이름이 같은 전형끼리만 묶었습니다.</li>
-      <li>“학교마다 실기 비중이 달라요”의 비율은 2027학년도 모집요강(진학사 입시자료실 게시본)이나 대학 입결 원문에 적힌 값만 넣었습니다. 요강 표가 텍스트로 깨지거나 요강을 받지 못한 전형은 “확인 필요”로 두었습니다. 2027 비율이 2024–2026과 다를 수 있습니다(예: 세종대 패션디자인 정시 2026 수능 50·실기 30·교과 20 → 2027 실기 50·수능 40·교과 10).</li>
+      <li><b>정시 성적 유의사항:</b> 정시 평균·50%·70% 값은 대부분 여러 영역 백분위의 평균이거나 대학별 환산점수입니다. 대학마다 반영 영역·영역별 비율·만점이 달라 백분위 평균이 같아도 대학 환산 총점은 다릅니다. 지원 전에 각 대학 입학처의 정시 성적 산출(환산) 프로그램이나 환산표에 자기 수능 성적을 넣어 확인해야 합니다.</li>
+    <li>“학교마다 실기 비중이 달라요”의 비율은 2027학년도 모집요강(진학사 입시자료실 게시본)이나 대학 입결 원문에 적힌 값만 넣었습니다. 요강 표가 텍스트로 깨지거나 요강을 받지 못한 전형은 “확인 필요”로 두었습니다. 2027 비율이 2024–2026과 다를 수 있습니다(예: 세종대 패션디자인 정시 2026 수능 50·실기 30·교과 20 → 2027 실기 50·수능 40·교과 10).</li>
 
     </ul>
   </div>
@@ -836,7 +845,7 @@ dash.draw('t_methods', (tb) => {
       v: '<svg viewBox="0 0 440 170" role="img" aria-label="수시는 가을, 정시는 겨울"><rect x="20" y="70" width="400" height="6" rx="3" class="off"/><rect x="20" y="70" width="190" height="6" rx="3" class="on"/><circle cx="120" cy="73" r="14" class="on"/><circle cx="330" cy="73" r="14" class="on"/><text x="120" y="40" text-anchor="middle" style="font-size:16px;font-weight:700">수시 · 9월</text><text x="120" y="118" text-anchor="middle" class="sm">내신 + 실기</text><text x="330" y="40" text-anchor="middle" style="font-size:16px;font-weight:700">정시 · 12월</text><text x="330" y="118" text-anchor="middle" class="sm">수능 + 실기</text><text x="225" y="150" text-anchor="middle" class="sm">11월 수능</text></svg>' },
     { h: '내신 등급', p: '학교 시험 성적을 1등급부터 9등급까지 나눈 거예요. 1등급이 가장 잘한 거고, 숫자가 커질수록 낮아요. 그래서 “내신 3.5”는 3등급과 4등급 사이라는 뜻이에요.', ex: '100명 중 앞쪽 4명 정도가 1등급이에요. 이 페이지 표는 9등급제 기준이에요.',
       v: (() => { const pct = [4, 7, 12, 17, 20, 17, 12, 7, 4]; let s = '<svg viewBox="0 0 440 180" role="img" aria-label="1등급부터 9등급까지 비율">'; pct.forEach((p, i) => { const h = p * 6; s += `<rect x="${22 + i * 46}" y="${140 - h}" width="34" height="${h}" rx="6" class="${i === 0 ? 'on' : 'off'}" style="animation-delay:${i * 50}ms"/><text x="${39 + i * 46}" y="160" text-anchor="middle">${i + 1}</text><text x="${39 + i * 46}" y="${132 - h}" text-anchor="middle" class="sm">${p}%</text>`; }); return s + '<text x="220" y="178" text-anchor="middle" class="sm">등급 (왼쪽이 좋아요)</text></svg>'; })() },
-    { h: '수능 백분위', p: '수능에서 나보다 점수가 낮은 학생이 100명 중 몇 명인지 나타낸 숫자예요. 백분위 80이면 100명 중 80명이 나보다 아래라는 뜻이에요. 클수록 좋아요.', ex: '백분위 80 → 100명 줄에서 앞에서 20번째쯤.',
+    { h: '수능 백분위', p: '수능에서 나보다 점수가 낮은 학생이 100명 중 몇 명인지 나타낸 숫자예요. 백분위 80이면 100명 중 80명이 나보다 아래라는 뜻이에요. 클수록 좋아요.', ex: '백분위 80 → 100명 줄에서 앞에서 20번째쯤. 정시 입결은 대학마다 과목·비율·만점이 달라서, 각 대학 환산표에 내 성적을 넣어 봐야 정확해요.',
       v: '<svg viewBox="0 0 440 230" role="img" aria-label="100개의 점 중 80개가 나보다 아래">' + dots(100, (i) => i < 80) + '<text x="220" y="225" text-anchor="middle" class="sm">파란 점 80개 = 나보다 점수가 낮은 학생</text></svg>' },
     { h: '평균 · 50% · 70%', p: '합격생 100명을 성적순으로 줄 세웠다고 생각해 보세요. 50% 위치는 딱 가운데인 50번째, 70% 위치는 70번째 학생의 성적이에요. 평균은 모두의 성적을 더해서 사람 수로 나눈 값이에요.', ex: '70% 위치 성적이면 합격선 근처라 아슬아슬하고, 50% 위치는 그보다 안정적이에요.',
       v: '<svg viewBox="0 0 440 230" role="img" aria-label="100명 중 50번째와 70번째 강조">' + dots(100, (i) => i === 49 || i === 69) + '<text x="' + (14 + 9 * 21) + '" y="100" text-anchor="middle" style="font-weight:700">50번째</text><text x="' + (14 + 9 * 21) + '" y="142" text-anchor="middle" style="font-weight:700">70번째</text><text x="220" y="225" text-anchor="middle" class="sm">합격생 100명을 성적순으로 세웠을 때</text></svg>' },
