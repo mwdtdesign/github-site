@@ -13,7 +13,7 @@ html,body{margin:0;background:#fff}
 <script>
 (function () {
   function parse(t) { t = t.replace(/^\uFEFF/, ''); const rows = []; let r = [], f = '', q = false; for (let i = 0; i < t.length; i++) { const c = t[i]; if (q) { if (c === '"') { if (t[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; } else if (c === '"') q = true; else if (c === ',') { r.push(f); f = ''; } else if (c === '\n') { r.push(f); rows.push(r); r = []; f = ''; } else if (c !== '\r') f += c; } if (f || r.length) { r.push(f); rows.push(r); } const h = rows.shift(); return rows.filter((x) => x.length > 1 || x[0]).map((x) => Object.fromEntries(h.map((k, i) => [k, x[i] ?? '']))); }
-  const store = { history: { status: 'loading', data: [] }, methods: { status: 'loading', data: [] } };
+  const store = { history: { status: 'loading', data: [] }, methods: { status: 'loading', data: [] }, academy: { status: 'loading', data: [] } };
   const calcs = [], draws = {};
   let ready = false;
   const run = (n, o) => { try { store[n] = { status: 'ok', data: o.fn(...(o.inputs || []).map((i) => (store[i] || { data: [] }).data)) }; } catch (e) { store[n] = { status: 'error', data: [] }; console.error(n, e); } };
@@ -24,9 +24,9 @@ html,body{margin:0;background:#fff}
     draw(n, fn) { if (fn) draws[n] = fn; drawOne(n); }
   };
   const get = (u) => fetch(u, { cache: 'no-cache' }).then((r) => { if (!r.ok) throw new Error(u + ' ' + r.status); return r.text(); });
-  Promise.all([get('data/history.csv'), get('data/methods.csv')]).then(([h, m]) => {
-    store.history = { status: 'ok', data: parse(h) }; store.methods = { status: 'ok', data: parse(m) };
-  }).catch((e) => { console.error(e); store.history = { status: 'error', data: [] }; store.methods = { status: 'error', data: [] }; })
+  Promise.all([get('data/history.csv'), get('data/methods.csv'), get('data/academy.csv')]).then(([h, m, a]) => {
+    store.history = { status: 'ok', data: parse(h) }; store.methods = { status: 'ok', data: parse(m) }; store.academy = { status: 'ok', data: parse(a) };
+  }).catch((e) => { console.error(e); store.history = { status: 'error', data: [] }; store.methods = { status: 'error', data: [] }; store.academy = { status: 'error', data: [] }; })
     .then(() => { ready = true; for (const [n, o] of calcs) { if (store.history.status === 'ok') run(n, o); else store[n] = { status: 'error', data: [] }; } Object.keys(draws).forEach(drawOne); });
 })();
 </script>
@@ -219,8 +219,9 @@ html,body{margin:0;background:#fff}
       <div><b data-draw="k_univs" data-count data-source="h_kpi" data-field="univs" data-row="0">—</b><span>대학</span></div>
       <div><b data-draw="k_tracks" data-count data-source="h_kpi" data-field="tracks" data-row="0">—</b><span>실기 전형</span></div>
       <div><b data-draw="k_rows" data-count data-source="h_kpi" data-field="rows" data-row="0">—</b><span>자료 줄</span></div>
+      <div><b data-draw="k_acad" data-count data-source="h_acad_kpi" data-field="students" data-row="0">—</b><span>학원 합격생</span></div>
     </div>
-    <nav class="jump" aria-label="바로가기"><a href="#learn">처음이세요?</a><a href="#schools">학교별 전형방법</a><a href="#trend">3년 비교</a><a href="#avg">학교별 평균</a><a href="#results">전체 자료</a><a href="#conv">등급표</a><a href="#offices">입학처</a></nav>
+    <nav class="jump" aria-label="바로가기"><a href="#learn">처음이세요?</a><a href="#schools">학교별 전형방법</a><a href="#trend">3년 비교</a><a href="#avg">학교별 평균</a><a href="#academy">학원 합격생</a><a href="#results">전체 자료</a><a href="#conv">등급표</a><a href="#offices">입학처</a></nav>
     <div class="cue" aria-hidden="true"><i></i>아래로 내려 보세요</div>
   </div>
 </header>
@@ -325,7 +326,33 @@ html,body{margin:0;background:#fff}
   </div>
 </section>
 
-<section class="band light" id="results">
+<section class="band light" id="academy">
+  <div class="wrap">
+    <div class="head rv"><span class="eyebrow">우리 학원 합격생</span><h2>우리 학원 선배들은 이 성적으로 붙었어요</h2><p class="lead">2024–2026학년도 학원 합격자 명단을 학과별로 묶었어요. 이름·출신학교 같은 개인 정보는 넣지 않았어요.</p></div>
+    <div class="figs rv" style="margin-bottom:28px">
+      <div class="fig"><small>3년 합격생</small><b><span data-draw="k_acad2" data-count data-source="h_acad_kpi" data-field="students" data-row="0">—</span><span class="u">명</span></b><p>추가합격 포함, 성적이 적힌 학생은 <span data-draw="k_acad_sc" data-source="h_acad_kpi" data-field="scored" data-row="0">—</span>명이에요.</p></div>
+      <div class="fig"><small>합격한 대학</small><b><span data-draw="k_acad_u" data-count data-source="h_acad_kpi" data-field="univs" data-row="0">—</span><span class="u">곳</span></b><p>수도권·충청권 밖 대학과 전문대도 그대로 넣었어요.</p></div>
+      <div class="fig"><small>수시 합격생 내신 평균</small><b><span data-draw="k_acad_g" data-source="h_acad_kpi" data-field="gradeAvg" data-row="0">—</span><span class="u">등급</span></b><p>수시 합격생 전체의 단순 평균이에요.</p></div>
+      <div class="fig"><small>정시 합격생 백분위 평균</small><b><span data-draw="k_acad_p" data-source="h_acad_kpi" data-field="pctAvg" data-row="0">—</span><span class="u">점</span></b><p>국어+탐구2 백분위 평균 기준이에요.</p></div>
+    </div>
+    <div class="note" role="note"><b class="ic" aria-hidden="true">!</b><p><strong>학원 합격생 표는 대학 공식 입결이 아니에요.</strong> 우리 학원에서 합격한 학생들만 모은 값이라 학과마다 인원이 1~2명인 곳이 많아요. 명단에 캠퍼스 구분이 없어 대학 이름으로만 묶었어요.<span>정시 성적은 국어+탐구2 백분위 평균이고, 괄호 안 영어 등급은 따로 적었어요. 대학별 환산점수와는 다르니 각 대학 환산표로 꼭 확인하세요.</span></p></div>
+    <div class="controls">
+      <select class="dash-select" data-draw="ac_year" aria-label="학년도"></select>
+      <select class="dash-select" data-draw="ac_univ" aria-label="대학"></select>
+      <select class="dash-select" data-draw="ac_sigi" aria-label="수시·정시"></select>
+      <input type="search" id="ac_q" placeholder="학과 검색" aria-label="학과 검색">
+      <span class="muted" data-draw="ac_count">—</span>
+    </div>
+    <div class="tw">
+      <table class="t" id="acadtable" data-source="h_acad" data-row-key="key">
+        <thead><tr><th data-field="학년도">학년도</th><th data-field="대학명">대학</th><th data-field="학과">학과</th><th data-field="전형시기">수시·정시</th><th data-field="합격인원">합격 인원</th><th data-field="성적종류">어떤 성적</th><th data-field="평균">평균</th><th data-field="최고">가장 좋은</th><th data-field="최저">가장 낮은</th><th data-field="영어등급평균">영어 등급 평균</th><th data-field="모집">모집</th><th data-field="경쟁률">경쟁률</th></tr></thead>
+        <tbody data-draw="acadtable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="results">
   <div class="wrap">
     <div class="head rv"><h2>전체 자료</h2><p class="lead">원문 값 그대로예요. 학교 이름 옆 “○○캠”은 캠퍼스예요. 맨 오른쪽 “원문 자료”를 누르면 출처가 열려요.</p></div>
     <div class="note" role="note"><b class="ic" aria-hidden="true">!</b><p><strong>정시(수능) 성적은 내 점수와 바로 비교하면 안 돼요.</strong> 여기 나온 정시 평균·50%·70% 값은 대부분 여러 과목(영역) 백분위를 평균 낸 값이거나 대학이 자기 방식으로 바꾼 환산점수예요. 대학마다 반영하는 과목, 과목별 비율, 만점이 달라서 백분위 평균이 같아도 대학별 환산 총점은 달라져요.<span>지원 전에는 꼭 각 대학 입학처의 정시 성적 산출(환산) 프로그램이나 환산표에 내 수능 성적을 직접 넣어 보고, 그 대학 입결과 비교하세요.</span></p></div>
@@ -346,7 +373,7 @@ html,body{margin:0;background:#fff}
         <tbody data-draw="maintable"></tbody>
       </table>
     </div>
-    <p class="faint" style="text-align:center;margin-top:14px">원본 표: <a href="data/history.csv">입시결과 CSV</a> · <a href="data/methods.csv">전형방법 CSV</a></p>
+    <p class="faint" style="text-align:center;margin-top:14px">원본 표: <a href="data/history.csv">입시결과 CSV</a> · <a href="data/methods.csv">전형방법 CSV</a> · <a href="data/academy.csv">학원 합격생 CSV</a></p>
     <div class="tw" style="margin-top:36px;max-height:60vh">
       <table class="t" data-source="h_methods" data-row-key="key">
         <thead><tr><th data-field="학교">대학(캠퍼스)</th><th data-field="전형시기">수시·정시</th><th data-field="전형명">전형</th><th data-field="비율">실기 : 성적</th><th data-field="성적종류">성적 종류</th><th data-field="실질반영">실질 반영</th><th data-field="반영과목">반영 과목</th><th data-field="확인상태">확인</th><th data-field="출처">출처</th><th data-field="비고">비고</th></tr></thead>
@@ -356,7 +383,7 @@ html,body{margin:0;background:#fff}
   </div>
 </section>
 
-<section class="band" id="conv">
+<section class="band light" id="conv">
   <div class="wrap">
     <div class="head rv"><h2>등급 참고표</h2><p class="lead">5등급제 내신을 9등급제로 바꿔 예전 입결과 대조하고, 수능 백분위가 몇 등급쯤인지 가늠해 보세요.</p></div>
     <div class="convgrid">
@@ -440,7 +467,7 @@ html,body{margin:0;background:#fff}
 </div>
 </section>
 
-<section class="band light" id="offices">
+<section class="band" id="offices">
   <div class="wrap">
     <div class="head rv"><h2>대학 입학처 바로가기</h2><p class="lead">모집요강과 최신 입결은 여기서 직접 확인하세요.</p></div>
     <div class="tw" style="max-height:none"><table class="t" data-source="h_univ" data-row-key="key">
@@ -449,7 +476,7 @@ html,body{margin:0;background:#fff}
   </div>
 </section>
 
-<section class="band" id="about">
+<section class="band light" id="about">
   <div class="wrap">
     <div class="head rv"><h2>자료와 한계</h2><p class="lead">어디서 가져왔고, 무엇이 빠졌는지 적었어요.</p></div>
     <ul class="lim">
@@ -464,7 +491,8 @@ html,body{margin:0;background:#fff}
     <li>추가로 확인한 학교: 호서대·백석대(충남), 한남대(대전)는 3년 성적을 넣었습니다. 동덕여대 수시는 대학이 성적을 공개하지 않아 경쟁률·충원만 넣었습니다. 가천대 정시 2024·2025 엑셀은 암호가 걸려 열지 못했고 2026 정시 결과에는 디자인 계열이 없습니다. 한양대 서울캠 응용미술교육과(수시 실기/실적)는 입학처 3개년 자료집에 실기 전형 결과가 없고, 홍익대 세종캠은 실기고사 없는 전형으로 선발, 연세대 미래캠은 입시결과를 영상으로만 공개, 동국대 WISE캠 2026 수시 결과에는 디자인 실기 행이 없어 넣지 못했습니다.</li>
     <li>대학마다 공개 방식이 다릅니다: 신한대는 원문에 기준(최종등록자 등)을 적지 않았고 “가장 낮은” 값은 원문의 커트라인입니다. 용인대는 평균 대신 최고·50%·70% 값을, 서울과기대 수시는 입학생 평균만 공개합니다. 한세대는 2025학년도부터 디자인 3개 학과를 디자인학부로 합쳐 모집합니다.</li>
     <li>모집단위 이름이 바뀐 곳(예: 명지대 2024 시각디자인전공 → 2025 비주얼커뮤니케이션디자인전공)은 비고에 적었고, 3년 비교 표에서는 이름이 같은 전형끼리만 묶었습니다.</li>
-      <li><b>정시 성적 유의사항:</b> 정시 평균·50%·70% 값은 대부분 여러 영역 백분위의 평균이거나 대학별 환산점수입니다. 대학마다 반영 영역·영역별 비율·만점이 달라 백분위 평균이 같아도 대학 환산 총점은 다릅니다. 지원 전에 각 대학 입학처의 정시 성적 산출(환산) 프로그램이나 환산표에 자기 수능 성적을 넣어 확인해야 합니다.</li>
+      <li><b>우리 학원 합격생:</b> 2024–2026학년도 학원 합격자 명단(985명)을 학년도·대학·학과·수시/정시별로 묶은 값입니다. 이름·출신학교·반은 넣지 않았습니다. 소수 성적(예: 3.1)은 수시 내신 등급, “94/2”·“95 (4)” 형식은 정시 국어+탐구2 백분위 평균과 영어 등급으로 읽었고, “ㅡ”·빈칸·강사 등 성적이 없는 학생은 인원에만 셌습니다. 명단에 캠퍼스 구분이 없어 대학 이름으로만 묶었고, 학교 카드의 학원 합격생 수도 같은 대학의 캠퍼스를 합친 값입니다. 대학 공식 입결과 다른 자료라 섞어 계산하지 않았습니다.</li>
+    <li><b>정시 성적 유의사항:</b> 정시 평균·50%·70% 값은 대부분 여러 영역 백분위의 평균이거나 대학별 환산점수입니다. 대학마다 반영 영역·영역별 비율·만점이 달라 백분위 평균이 같아도 대학 환산 총점은 다릅니다. 지원 전에 각 대학 입학처의 정시 성적 산출(환산) 프로그램이나 환산표에 자기 수능 성적을 넣어 확인해야 합니다.</li>
     <li>“학교마다 실기 비중이 달라요”의 비율은 2027학년도 모집요강(진학사 입시자료실 게시본)이나 대학 입결 원문에 적힌 값만 넣었습니다. 요강 표가 텍스트로 깨지거나 요강을 받지 못한 전형은 “확인 필요”로 두었습니다. 2027 비율이 2024–2026과 다를 수 있습니다(예: 세종대 패션디자인 정시 2026 수능 50·실기 30·교과 20 → 2027 실기 50·수능 40·교과 10).</li>
 
     </ul>
@@ -580,8 +608,15 @@ if (!window.__haResize) { window.__haResize = true; let t; window.addEventListen
     const out = el.parentElement.querySelector('output'); const g = parseFloat(el.value);
     if (!isFinite(g) || g < 1 || g > 5) { out.textContent = '→ 1~5 사이 숫자를 넣어 주세요'; return; }
     const c = g5cum(g), g9 = cum9g(c);
-    out.textContent = `→ 대략 상위 ${c.toFixed(0)}% · 9등급제 약 ${g9.toFixed(2)}등급` + near(g9);
+    out.textContent = `→ 대략 상위 ${c.toFixed(0)}% · 9등급제 약 ${g9.toFixed(2)}등급` + near(g9) + acadNear('수시', g9, 0.3);
   });
+  const acadNear = (sigi, v, tol) => {
+    try {
+      const d = dash.data('h_acad'); if (d.status !== 'ok') return '';
+      const list = d.data.filter((r) => r['전형시기'] === sigi && r['평균'] !== '' && Math.abs(parseFloat(r['평균']) - v) <= tol).sort((a, b) => Math.abs(parseFloat(a['평균']) - v) - Math.abs(parseFloat(b['평균']) - v)).slice(0, 6);
+      return list.length ? ' · 우리 학원에서 비슷한 성적으로 합격한 학과: ' + list.map((r) => `${r['대학명'].replace(/대학교/, '대')} ${r['학과']} ${r['평균']}(${r['학년도']}, ${r['합격인원']}명)`).join(', ') + '.' : '';
+    } catch (e) { return ''; }
+  };
   const nearPct = (p) => {
     try {
       const d = dash.data('h_avgdots'); if (d.status !== 'ok') return '';
@@ -595,7 +630,7 @@ if (!window.__haResize) { window.__haResize = true; let t; window.addEventListen
   for (const el of document.querySelectorAll('#cv_pct')) el.addEventListener('input', () => {
     const out = el.parentElement.querySelector('output'); const p = parseFloat(el.value);
     if (!isFinite(p) || p < 0 || p > 100) { out.textContent = '→ 0~100 사이 숫자를 넣어 주세요'; return; }
-    out.textContent = `→ 대략 ${gradeOfPct(p)}등급 (상위 ${(100 - p).toFixed(1)}%)` + nearPct(p);
+    out.textContent = `→ 대략 ${gradeOfPct(p)}등급 (상위 ${(100 - p).toFixed(1)}%)` + nearPct(p) + acadNear('정시', p, 3);
   });
 })();
 </script>
@@ -789,15 +824,31 @@ dash.calc('h_methods', { title: '전형방법(실기 : 성적)', description: '�
   return { ...r, key: [학교, r['전형시기'], r['전형명']].join('|'), 학교, sil: isFinite(s) ? s : null, sung: isFinite(g) ? g : null, 비율: isFinite(s) ? s + ' : ' + (isFinite(g) ? g : 0) : '확인 필요' };
 }) });
 
-dash.calc('h_cards', { title: '학교 카드', description: '학교(캠퍼스)별 지역, 실기 전형 목록과 각 전형의 실기 : 성적 비율·반영 과목', inputs: ['history', 'methods'], fn: (history, methods) => {
+dash.calc('h_acad', { title: '학원 합격생(학과별)', description: '학원 합격자 명단을 학년도·대학·학과·수시/정시별로 묶은 표(개인 정보 제외). 대학명 표기를 맞춘 것 외에는 명단 값 그대로', inputs: ['academy'], fn: (academy) => academy.map((r) => ({ ...r, key: [r['학년도'], r['대학명'], r['학과'], r['전형시기']].join('|') })) });
+
+dash.calc('h_acad_kpi', { title: '학원 합격생 요약', description: '학원 합격생 수(학과별 합격 인원의 합), 성적이 적힌 학생 수, 합격 대학 수, 수시 내신·정시 백분위 학생 단위 평균(학과 평균 × 인원으로 가중)', inputs: ['academy'], fn: (academy) => {
+  const num = (v) => { const x = parseFloat(v); return isFinite(x) ? x : null; };
+  let students = 0, scored = 0, gs = 0, gn = 0, ps = 0, pn = 0;
+  for (const r of academy) {
+    const n = num(r['합격인원']) || 0, k = num(r['성적기재인원']) || 0, a = num(r['평균']);
+    students += n; scored += k;
+    if (a !== null && k) { if (r['전형시기'] === '수시') { gs += a * k; gn += k; } else if (r['전형시기'] === '정시') { ps += a * k; pn += k; } }
+  }
+  return [{ students, scored, univs: new Set(academy.map((r) => r['대학명'])).size, gradeAvg: gn ? Math.round(gs / gn * 100) / 100 : null, pctAvg: pn ? Math.round(ps / pn * 10) / 10 : null }];
+} });
+
+dash.calc('h_cards', { title: '학교 카드', description: '학교(캠퍼스)별 지역, 실기 전형 목록과 각 전형의 실기 : 성적 비율·반영 과목, 같은 대학 학원 합격생 수와 평균(캠퍼스 구분 없음)', inputs: ['history', 'methods', 'academy'], fn: (history, methods, academy) => {
+  const ac = {};
+  for (const r of academy) { const u = (ac[r['대학명']] = ac[r['대학명']] || { n: 0, gs: 0, gn: 0, ps: 0, pn: 0 }); const n = parseFloat(r['합격인원']) || 0, k = parseFloat(r['성적기재인원']) || 0, a = parseFloat(r['평균']); u.n += n; if (isFinite(a) && k) { if (r['전형시기'] === '수시') { u.gs += a * k; u.gn += k; } else if (r['전형시기'] === '정시') { u.ps += a * k; u.pn += k; } } }
   const m = methods.map((r) => { const camp = r['캠퍼스'] || ''; const s = parseFloat(r['실기비율']), q = parseFloat(r['성적비율']); return { ...r, 학교: r['대학명'] + ((/캠퍼스/.test(camp) && !/ERICA/.test(r['대학명'])) ? ' ' + camp.replace('캠퍼스', '캠') : ''), sil: isFinite(s) ? s : null, sung: isFinite(q) ? q : null }; });
   const g = new Map();
   for (const r of history) {
     const k = r['대학명'] + ((/캠퍼스/.test(r['캠퍼스'] || '') && !/ERICA/.test(r['대학명'])) ? ' ' + r['캠퍼스'].replace('캠퍼스', '캠') : '');
-    if (!g.has(k)) g.set(k, { key: k, 학교: k, 지역: r['지역'], ys: new Set() });
+    if (!g.has(k)) g.set(k, { key: k, 학교: k, base: r['대학명'], 지역: r['지역'], ys: new Set() });
     g.get(k).ys.add(r['학년도']);
   }
-  return [...g.values()].map((o) => ({ key: o.key, 학교: o.학교, 지역: o.지역, 학년도들: [...o.ys].sort().join(' · '), tracks: m.filter((x) => x.학교 === o.학교).sort((a, b) => a.전형시기.localeCompare(b.전형시기, 'ko')) })).sort((a, b) => a.학교.localeCompare(b.학교, 'ko'));
+  const acad = (b) => { const u = ac[b]; return u ? { n: u.n, g: u.gn ? Math.round(u.gs / u.gn * 100) / 100 : null, p: u.pn ? Math.round(u.ps / u.pn * 10) / 10 : null } : null; };
+  return [...g.values()].map((o) => ({ key: o.key, 학교: o.학교, 지역: o.지역, acad: acad(o.base), 학년도들: [...o.ys].sort().join(' · '), tracks: m.filter((x) => x.학교 === o.학교).sort((a, b) => a.전형시기.localeCompare(b.전형시기, 'ko')) })).sort((a, b) => a.학교.localeCompare(b.학교, 'ko'));
 } });
 </script>
 
@@ -825,12 +876,42 @@ dash.draw('scards', (box) => {
       if (sj) { const p = document.createElement('div'); p.className = 'sj'; p.textContent = sj; w.appendChild(p); }
       b.appendChild(w);
     }
+    if (u.acad) { const p = document.createElement('div'); p.className = 'sj'; p.style.color = 'var(--hp-blue2)'; p.textContent = '학원 합격생 3년 ' + u.acad.n + '명' + (u.acad.g !== null ? ' · 수시 내신 평균 ' + u.acad.g.toFixed(2) : '') + (u.acad.p !== null ? ' · 정시 백분위 평균 ' + u.acad.p.toFixed(1) : '') + ' (캠퍼스 구분 없음)'; b.appendChild(p); }
     if (!u.tracks.length) { const p = document.createElement('div'); p.className = 'sj'; p.textContent = '전형방법 정보 없음'; b.appendChild(p); }
     const src = document.createElement('div'); src.className = 'src'; src.textContent = [...new Set(u.tracks.map((t) => t.출처).filter(Boolean))].join(' · ') || '출처: 확인 필요'; b.appendChild(src);
     b.addEventListener('click', () => { HH.univ = u.학교; HH.show('results'); dash.draw('maintable'); dash.draw('f_count'); dash.draw('f_univ'); });
     box.appendChild(b);
   }
 });
+/* academy section */
+window.AC = window.AC || { year: '', univ: '', sigi: '', q: '' };
+const AC_one = (name, field, digits) => dash.draw(name, (el) => { const d = dash.data('h_acad_kpi'); const v = d.status === 'ok' && d.data[0] ? d.data[0][field] : null; el.textContent = v === null || v === undefined ? '—' : (digits !== undefined ? Number(v).toFixed(digits) : Number(v).toLocaleString('ko-KR')); if (el.hasAttribute('data-count') && window.HH && HH.count) HH.count(el); });
+AC_one('k_acad', 'students'); AC_one('k_acad2', 'students'); AC_one('k_acad_sc', 'scored'); AC_one('k_acad_u', 'univs'); AC_one('k_acad_g', 'gradeAvg', 2); AC_one('k_acad_p', 'pctAvg', 1);
+const AC_sel = (name, label, field, key) => dash.draw(name, (sel) => {
+  const d = dash.data('h_acad');
+  const vals = d.status === 'ok' ? [...new Set(d.data.map((r) => r[field]).filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b), 'ko')) : [];
+  sel.replaceChildren(new Option(label, ''), ...vals.map((v) => new Option(v, v)));
+  sel.value = AC[key] || '';
+  sel.onchange = () => { AC[key] = sel.value; dash.draw('acadtable'); dash.draw('ac_count'); };
+});
+AC_sel('ac_year', '학년도 전체', '학년도', 'year'); AC_sel('ac_univ', '대학 전체', '대학명', 'univ'); AC_sel('ac_sigi', '수시·정시 전체', '전형시기', 'sigi');
+for (const el of document.querySelectorAll('#ac_q')) el.addEventListener('input', () => { AC.q = el.value; dash.draw('acadtable'); dash.draw('ac_count'); });
+AC.rows = () => { const d = dash.data('h_acad'); if (d.status !== 'ok') return null; const q = AC.q.trim(); return d.data.filter((r) => (!AC.year || r['학년도'] === AC.year) && (!AC.univ || r['대학명'] === AC.univ) && (!AC.sigi || r['전형시기'] === AC.sigi) && (!q || (r['학과'] || '').includes(q) || (r['대학명'] || '').includes(q))); };
+dash.draw('ac_count', (el) => { const r = AC.rows(); el.textContent = r ? r.length.toLocaleString('ko-KR') + '줄 · ' + r.reduce((a, x) => a + (parseFloat(x['합격인원']) || 0), 0) + '명' : '—'; });
+dash.draw('acadtable', (tb) => {
+  tb.replaceChildren();
+  const rows = AC.rows();
+  const cols = ['학년도', '대학명', '학과', '전형시기', '합격인원', '성적종류', '평균', '최고', '최저', '영어등급평균', '모집', '경쟁률'];
+  if (!rows) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = cols.length; td.textContent = dash.data('h_acad').status === 'error' ? '자료를 불러오지 못했어요.' : '불러오는 중…'; tr.appendChild(td); tb.appendChild(tr); return; }
+  const frag = document.createDocumentFragment();
+  for (const r of rows) {
+    const tr = document.createElement('tr'); tr.dataset.key = r.key;
+    for (const c of cols) { const td = document.createElement('td'); const v = r[c] ?? ''; td.textContent = v === '' && ['평균', '최고', '최저'].includes(c) ? '—' : v; if (['평균', '최고', '최저'].includes(c)) td.className = v === '' ? 'na' : 'b'; if (c === '성적종류' && v) { const h = document.createElement('span'); h.className = 'hint'; h.textContent = /등급/.test(v) ? '작을수록 좋음' : '클수록 좋음'; td.appendChild(h); } tr.appendChild(td); }
+    frag.appendChild(tr);
+  }
+  tb.appendChild(frag);
+});
+
 dash.draw('t_methods', (tb) => {
   const d = dash.data('h_methods');
   tb.replaceChildren();
